@@ -6,6 +6,8 @@ import { Cards } from "./pages/cards"
 import { Info } from "./pages/info"
 import { CreateCards } from "./pages/create"
 
+import "./main.css"
+
 const root = createRoot(document.getElementById('app'));
 root.render(
 	<BrowserRouter>

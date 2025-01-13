@@ -67,7 +67,7 @@ td {
 
 /*Переопределяют cards.css*/
 
-/*.button, .text-input {
+.main-page_button, .text-input {
 	border: 1px solid var(--black);
 	border-radius: 5px	;
 	font-size: 100%;
@@ -79,14 +79,14 @@ td {
 	text-decoration: none;
 }
 
-.button:hover {
+.main-page_button:hover {
 	background-color: grey;
 }
 
-.button:active {
+.main-page_button:active {
 	background-color: var(--black);
 	color: var(--white);
-}*/
+}
 
 .text-input {
 	width: auto;
