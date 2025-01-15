@@ -1,25 +1,12 @@
-// for future
-//import { useParams } from "react-router";
 import { useEffect, useState } from "react"
+import { useSelector } from "react-redux"
+import { useParams } from "react-router";
 
-// TODO: style must be common for entire app
 import "./cards.css"
 
-// TODO: load from store
-const data = [
-	{
-		"question":"orange",
-		"answer":"апельсин"
-	},
-	{
-		"question":"apple",
-		"answer":"яблоко"
-	},
-]
-
 export function Flashcards() {
-	// for future
-	//const params = useParams()
+	const { id } = useParams()
+  const modules = useSelector(state => state.modules.modules)
 
   const [terms, setTerms] = useState([])
   const [received, setReceived] = useState(false)
@@ -28,6 +15,15 @@ export function Flashcards() {
   const [deleted, setDeleted] = useState([])
 
   const [lastAction, setLastAction] = useState("inc")
+
+  // TODO: rewrite !!! 
+  useEffect(() => {
+    if (!received) {
+      setTerms(modules.find(mod => mod.id == id).terms)
+      console.log(id)
+      setReceived(true)
+    }
+  }, [])
 
   useEffect(() => {
     const key = event => {
@@ -52,16 +48,9 @@ export function Flashcards() {
 
   }, [number])
 
-  useEffect(() => {
-    if (!received) {
-      setTerms(data)
-      setReceived(true)
-    }
-  }, [])
-
   function incrementNumber(ff) {
     let newNumber;
-    if (number == data.length - 1) {
+    if (number == terms.length - 1) {
       newNumber = 0
     } else {
       newNumber = number + 1
@@ -72,7 +61,7 @@ export function Flashcards() {
       let find = false
       let n = newNumber
       while (!find) {
-        if (n == data.length - 1) {
+        if (n == terms.length - 1) {
           n = 0
         }
         if (deleted.findIndex((element) => element == n) == -1) {
@@ -92,7 +81,7 @@ export function Flashcards() {
   function decrementNumber(ff) {
     let newNumber;
     if (number == 0) {
-      newNumber = data.length - 1
+      newNumber = terms.length - 1
     } else {
       newNumber = number - 1
     }
@@ -104,7 +93,7 @@ export function Flashcards() {
       let n = newNumber
       while (!find) {
         if (n == -1) {
-          n = data.length - 1
+          n = terms.length - 1
         }
         if (deleted.findIndex((element) => element == n) == -1) {
           ff(n)
