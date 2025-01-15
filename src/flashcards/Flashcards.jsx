@@ -17,7 +17,7 @@ const data = [
 	},
 ]
 
-export function Cards() {
+export function Flashcards() {
 	// for future
 	//const params = useParams()
 
