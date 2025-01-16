@@ -1,4 +1,5 @@
 import { Outlet, Link } from "react-router";
+import DeleteModuleConfirm from "./modules/deleteModuleConfirm"
 
 export function Layout() {
 	return (<>
@@ -7,5 +8,6 @@ export function Layout() {
 			<Link to="/info">Справка</Link>
 		</nav>
 		<Outlet/>
+		<DeleteModuleConfirm/>
 	</>)
 }
