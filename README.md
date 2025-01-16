@@ -1,7 +1,7 @@
 # Flashcards
 
 ## Online demo
-https://davidvanuxin-gihub-io.vercel.app/
+[simple-flashcards.vercel.app](https://simple-flashcards.vercel.app/)
 
 ## Описание
 Аналог более известного приложения Quizlet.
