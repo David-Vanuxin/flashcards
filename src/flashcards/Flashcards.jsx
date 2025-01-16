@@ -20,7 +20,6 @@ export function Flashcards() {
   useEffect(() => {
     if (!received) {
       setTerms(modules.find(mod => mod.id == id).terms)
-      console.log(id)
       setReceived(true)
     }
   }, [])
