@@ -2,6 +2,13 @@ import { createModule } from "./modulesSlice"
 import { useDispatch } from "react-redux"
 import { useState } from "react"
 
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Typography from '@mui/material/Typography';
+
 export default function CreateModule() {
 	const dispatch = useDispatch()
 	const [name, setName] = useState("")
@@ -9,29 +16,29 @@ export default function CreateModule() {
 	const [separator, setSeparator] = useState("")
 
 	return (<>
-		<h1>Создать новый модуль</h1>
+		<Typography variant="h5">Создать новый модуль</Typography>
 		<div className="buttons-wrapper">
-			<label>Имя модуля</label>
-			<input onChange={event=>setName(event.target.value)} className="text-input"></input>
+			<TextField style={{ width: "50%" }} onChange={event=>setName(event.target.value)} label="Имя модуля" variant="outlined" placeholder="Новый модуль"/>
 		</div>
 		<div className="buttons-wrapper">
-			<label>Разделитель</label>
-			<input onChange={event=>setSeparator(event.target.value)} className="text-input" placeholder="Например: _"></input>
+			<TextField style={{ width: "50%" }} onChange={event=>setName(event.target.value)} label="Разделитель" variant="outlined" placeholder="Например: _"/>
 		</div>
-		<p className="text">Перед добавлением убедитесь, что:</p>
-		<ul className="text">
-			<li>Все тройка "термин разделитель значение" имеют разделитель</li>
-			<li>Каждая тройка начинается с новой строки</li>
-		</ul>
-		<textarea
-			onChange={event=>setText(event.target.value)}
-			className="text-area"
-			placeholder="Образец: яблоко _ apple"
-			spellCheck="false">
-		</textarea>
+		<Typography variant="body1">Перед добавлением убедитесь, что:</Typography>
+		<List>
+			<ListItem><ListItemText variant="body2">Каждая пара начинается с новой строки</ListItemText></ListItem>
+			<ListItem><ListItemText variant="body2">На каждой строке есть разделитель</ListItemText></ListItem>
+		</List>
+    <TextField
+    	fullWidth
+    	onChange={event=>setText(event.target.value)}
+      label="Впишите сюда пары значений"
+      placeholder="Образец: яблоко _ apple"
+      multiline
+      rows={6}
+    />
 		<div className="buttons-wrapper">
-			<button className="main-page_button" onClick={() => dispatch(createModule({name, separator, text}))}>Сохранить</button>
-			<button className="main-page_button">Отмена</button>
+			<Button variant="contained" onClick={() => dispatch(createModule({name, separator, text}))}>Сохранить</Button>
+			<Button variant="outlined">Отмена</Button>
 		</div>
 	</>)
 }

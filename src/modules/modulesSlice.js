@@ -30,8 +30,6 @@ export const modulesSlice =  createSlice({
 				]
 			}
 		],
-
-		deletedModule: null
 	},
 	reducers: {
 		createModule: (state, action) => {
@@ -41,19 +39,10 @@ export const modulesSlice =  createSlice({
 		},
 
 		deleteModule: (state, action) => {
-			state.deletedModule = state.modules.find(mod => mod.id == action.payload)
+			state.modules = [...state.modules.filter(mod => mod.id != action.payload)]
 		},
-
-		confirmDeleteModule: state => {
-			state.modules = [...state.modules.filter(mod => mod.id != state.deletedModule.id)]
-			state.deletedModule = null
-		},
-
-		cancelDeleteModule: state => {
-			state.deletedModule = null
-		}
 	}
 })
 
-export const { createModule, deleteModule, confirmDeleteModule, cancelDeleteModule } = modulesSlice.actions
+export const { createModule, deleteModule } = modulesSlice.actions
 export default modulesSlice.reducer

@@ -11,7 +11,7 @@ import { Info } from "./pages/info"
 import { Flashcards } from "./flashcards/Flashcards"
 import CreateModule from "./modules/CreateModule"
 
-import "./main.css"
+import '@fontsource/roboto/400.css';
 
 const root = createRoot(document.getElementById('app'));
 root.render(
