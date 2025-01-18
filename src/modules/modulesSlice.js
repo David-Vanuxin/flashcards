@@ -4,7 +4,8 @@ import {getModule, getId } from "./helpers"
 export const modulesSlice =  createSlice({
 	name: "modules",
 	initialState: {
-		modules: [
+		modules: []
+/*		modules: [
 			{
 				id: 0,
 				name: "Test000",
@@ -29,7 +30,7 @@ export const modulesSlice =  createSlice({
 					{answer: "cccc", question: "dddd"},
 				]
 			}
-		],
+		],*/
 	},
 	reducers: {
 		createModule: (state, action) => {

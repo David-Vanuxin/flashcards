@@ -27,6 +27,10 @@ import Collapse from '@mui/material/Collapse';
 export default function ViewModules(props) {
 	const modules = useSelector(state => state.modules.modules)
 
+	if (modules.length == 0) return (<>
+		<Typography variant="body1">Чтобы создать модуль нажмите кнопку "+"</Typography>
+	</>)
+
 	return (<>
 		<Table sx={{ border: "none" }} aria-label="collapsible table">
 		<TableBody>
