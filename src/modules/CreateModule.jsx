@@ -9,6 +9,10 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 export default function CreateModule() {
 	const dispatch = useDispatch()
@@ -24,11 +28,21 @@ export default function CreateModule() {
 		<div className="buttons-wrapper">
 			<TextField style={{ width: "50%" }} onChange={event=>setName(event.target.value)} label="Разделитель" variant="outlined" placeholder="Например: _"/>
 		</div>
-		<Typography variant="body1">Перед добавлением убедитесь, что:</Typography>
-		<List>
-			<ListItem><ListItemText variant="body2">Каждая пара начинается с новой строки</ListItemText></ListItem>
-			<ListItem><ListItemText variant="body2">На каждой строке есть разделитель</ListItemText></ListItem>
-		</List>
+		<Accordion /*style={{width: "95%"}}*/>
+			<AccordionSummary 
+				expandIcon={<ArrowDropDownIcon />}
+        aria-controls="panel-content"
+        id="panel-header">
+				<Typography variant="body1">Правила ввода</Typography>
+			</AccordionSummary>
+			<AccordionDetails>
+				<Typography variant="body1">Перед добавлением убедитесь, что:</Typography>
+				<List>
+					<ListItem><ListItemText primary="Каждая пара начинается с новой строки" variant="body2"/></ListItem>
+					<ListItem><ListItemText primary="На каждой строке есть разделитель" variant="body2"/></ListItem>
+				</List>
+			</AccordionDetails>
+		</Accordion>
     <TextField
     	fullWidth
     	onChange={event=>setText(event.target.value)}
