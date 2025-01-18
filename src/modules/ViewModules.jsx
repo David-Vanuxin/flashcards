@@ -9,6 +9,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -65,7 +66,9 @@ function Module(props) {
 			</TableCell>
 			<TableCell align="left">{props.mod.name}</TableCell>
 			<TableCell align="left">
-				<Button size="small" variant="contained" component={Link} to={`flashcards/${props.mod.id}`}>Учить</Button>
+				<IconButton size="small" component={Link} to={`flashcards/${props.mod.id}`}>
+					<ArrowOutwardIcon />
+				</IconButton>
 			</TableCell>
 			<TableCell>
 			<IconButton size="small" onClick={() => setOpenDialog(true)}>
