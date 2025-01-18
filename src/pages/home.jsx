@@ -12,15 +12,17 @@ export function Home() {
 		<Box>
 			<Typography variant="h5">Все модули</Typography>
 			<ViewModules />
-			<Fab 
-				component={Link}
-				to="/create" 
-				size="medium" 
-				color="primary" 
-				aria-label="add"
-			>
-				<AddIcon/>
-			</Fab>
+			<Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
+				<Fab 
+					component={Link}
+					to="/create" 
+					size="medium" 
+					color="primary" 
+					aria-label="add"
+				>
+					<AddIcon/>
+				</Fab>
+			</Box>
 		</Box>
 	</>)
 }
