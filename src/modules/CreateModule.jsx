@@ -1,6 +1,7 @@
 import { createModule } from "./modulesSlice"
 import { useDispatch } from "react-redux"
 import { useState } from "react"
+import { Link } from "react-router";
 
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -37,8 +38,8 @@ export default function CreateModule() {
       rows={6}
     />
 		<div className="buttons-wrapper">
-			<Button variant="contained" onClick={() => dispatch(createModule({name, separator, text}))}>Сохранить</Button>
-			<Button variant="outlined">Отмена</Button>
+			<Button component={Link} to="/" variant="contained" onClick={() => dispatch(createModule({name, separator, text}))}>Сохранить</Button>
+			<Button component={Link} to="/" variant="outlined">Отмена</Button>
 		</div>
 	</>)
 }
