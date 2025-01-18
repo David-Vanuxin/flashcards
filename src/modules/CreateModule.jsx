@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux"
 import { useState } from "react"
 import { Link } from "react-router";
 
+import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import List from '@mui/material/List';
@@ -22,13 +23,11 @@ export default function CreateModule() {
 
 	return (<>
 		<Typography variant="h5">Создать новый модуль</Typography>
-		<div className="buttons-wrapper">
-			<TextField style={{ width: "50%" }} onChange={event=>setName(event.target.value)} label="Имя модуля" variant="outlined" placeholder="Новый модуль"/>
-		</div>
-		<div className="buttons-wrapper">
-			<TextField style={{ width: "50%" }} onChange={event=>setName(event.target.value)} label="Разделитель" variant="outlined" placeholder="Например: _"/>
-		</div>
-		<Accordion /*style={{width: "95%"}}*/>
+		<Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>	
+			<TextField onChange={event=>setName(event.target.value)} label="Имя модуля" variant="outlined" placeholder="Новый модуль"/>
+			<TextField onChange={event=>setName(event.target.value)} label="Разделитель" variant="outlined" placeholder="Например: _"/>
+		</Box>
+		<Accordion sx={{ mt: 1, mb: 1 }}>
 			<AccordionSummary 
 				expandIcon={<ArrowDropDownIcon />}
         aria-controls="panel-content"
@@ -51,9 +50,9 @@ export default function CreateModule() {
       multiline
       rows={6}
     />
-		<div className="buttons-wrapper">
+    <Box sx={{ mt: 1, display: 'flex', justifyContent: 'right', gap: 1 }}>
 			<Button component={Link} to="/" variant="contained" onClick={() => dispatch(createModule({name, separator, text}))}>Сохранить</Button>
 			<Button component={Link} to="/" variant="outlined">Отмена</Button>
-		</div>
+    </Box>
 	</>)
 }
