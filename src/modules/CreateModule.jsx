@@ -25,7 +25,7 @@ export default function CreateModule() {
 		<Typography variant="h5">Создать новый модуль</Typography>
 		<Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>	
 			<TextField onChange={event=>setName(event.target.value)} label="Имя модуля" variant="outlined" placeholder="Новый модуль"/>
-			<TextField onChange={event=>setName(event.target.value)} label="Разделитель" variant="outlined" placeholder="Например: _"/>
+			<TextField onChange={event=>setSeparator(event.target.value)} label="Разделитель" variant="outlined" placeholder="Например: _"/>
 		</Box>
 		<Accordion sx={{ mt: 1, mb: 1 }}>
 			<AccordionSummary 
