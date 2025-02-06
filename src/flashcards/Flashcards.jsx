@@ -12,14 +12,21 @@ export function Flashcards() {
   const [received, setReceived] = useState(false)
   const [number, setNumber] = useState(0)
   const [status, setStatus] = useState("question")
-  const [deleted, setDeleted] = useState([])
 
   const [lastAction, setLastAction] = useState("inc")
 
-  // TODO: rewrite !!! 
   useEffect(() => {
     if (!received) {
-      setTerms(modules.find(mod => mod.id == id).terms)
+      setTerms(modules
+        .find(mod => mod.id == id)
+        .terms
+        .map((term, index, arr) => {
+          let next = 0
+          if (index + 1 < arr.length) next = index + 1
+          let prev = index - 1
+          if (index === 0) prev = arr.length - 1
+          return {...term, next, prev, hidden: false}
+        }))
       setReceived(true)
     }
   }, [])
@@ -27,9 +34,9 @@ export function Flashcards() {
   useEffect(() => {
     const key = event => {
       if (event.key == "ArrowLeft") {
-        decrementNumber(setNumber)
+        prev()
       } else if (event.key == "ArrowRight") {
-        incrementNumber(setNumber)
+        next()
       } else if (event.keyCode == 13 || event.keyCode == 32) {
         deleteCard(number) 
       } else if (event.key == "ArrowUp") {
@@ -47,89 +54,44 @@ export function Flashcards() {
 
   }, [number])
 
-  function incrementNumber(ff) {
-    let newNumber;
-    if (number == terms.length - 1) {
-      newNumber = 0
-    } else {
-      newNumber = number + 1
-    }
-    if (deleted.findIndex((element) => element == newNumber) == -1) {
-      ff(newNumber)
-    } else {
-      let find = false
-      let n = newNumber
-      while (!find) {
-        if (n == terms.length - 1) {
-          n = 0
-        }
-        if (deleted.findIndex((element) => element == n) == -1) {
-          ff(n)
-          break
-        } else {
-          if (n != newNumber) n++
-          else break
-        }
-      }
-    }
-
+  function next() {
+    let nextTermIndex = terms[number].next
+    while(terms[nextTermIndex].hidden)
+      nextTermIndex = terms[nextTermIndex].next
+    setNumber(nextTermIndex)
     setLastAction("inc")
     setStatus("question")
   }
 
-  function decrementNumber(ff) {
-    let newNumber;
-    if (number == 0) {
-      newNumber = terms.length - 1
-    } else {
-      newNumber = number - 1
-    }
-
-    if (deleted.findIndex((element) => element == newNumber) == -1) {
-      ff(newNumber)
-    } else {
-      let find = false
-      let n = newNumber
-      while (!find) {
-        if (n == -1) {
-          n = terms.length - 1
-        }
-        if (deleted.findIndex((element) => element == n) == -1) {
-          ff(n)
-          break
-        } else {
-          if (n != newNumber) n--
-          else break
-        }
-      }
-    }
-
+  function prev() {
+    let nextTermIndex = terms[number].prev
+    while(terms[nextTermIndex].hidden) 
+      nextTermIndex = terms[nextTermIndex].prev
+    setNumber(nextTermIndex)
     setLastAction("dec")
     setStatus("question")
   }
 
   function deleteCard(cardNumber) {
-    setDeleted([...deleted, cardNumber])
+    if (terms.reduce((count, term) => !term.hidden ? count++ : count, 0) === 1)
+      return
+    terms[cardNumber].hidden = true
+    setTerms([...terms])
     if (lastAction == "inc") {
-      incrementNumber(setNumber)
+      next()
     } else if (lastAction == "dec") {
-      decrementNumber(setNumber)
+      prev()
     }
-  }
-  function reset() {
-    setDeleted([])
-    setNumber(0)
-    setStatus("question")
   }
 
   if (!received) return (<h1>Загрузка...</h1>)
   else if (received) return (
     <div className="cards-wrapper">
-      <Card deleted={deleted} number={number} setNumber={setNumber} terms={terms} status={status} setStatus={setStatus}/>
+      <Card number={number} setNumber={setNumber} terms={terms} status={status} setStatus={setStatus}/>
       <div className="buttons">
         <button className="button delete" onClick={() => deleteCard(number)}>✕</button>
-        <button onClick={() => decrementNumber(setNumber)} className="button arrow">&#8592;</button>
-        <button onClick={() => incrementNumber(setNumber)} className="button arrow">&#8594;</button>
+        <button onClick={prev} className="button arrow">&#8592;</button>
+        <button onClick={next} className="button arrow">&#8594;</button>
       </div>
     </div>
   )
