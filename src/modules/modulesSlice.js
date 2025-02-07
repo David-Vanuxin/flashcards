@@ -4,33 +4,17 @@ import {getModule, getId } from "./helpers"
 export const modulesSlice =  createSlice({
 	name: "modules",
 	initialState: {
-		modules: []
-/*		modules: [
+		modules: [
 			{
 				id: 0,
-				name: "Test000",
+				name: "Example",
 				terms: [
 					{answer: "яблоко", question: "apple"},
 					{answer: "апельсин", question: "orange"},
-				]
-			},
-			{
-				id: 1,
-				name: "Test1111",
-				terms: [
-					{answer: "1+2", question: "3"},
-					{answer: "3 ** 3", question: "27"},
-				]
-			},
-			{
-				id: 2,
-				name: "Test222222",
-				terms: [
-					{answer: "aaaa", question: "bbbb"},
-					{answer: "cccc", question: "dddd"},
+					{answer: "2 + 2", question: "4"},
 				]
 			}
-		],*/
+		]
 	},
 	reducers: {
 		createModule: (state, action) => {
