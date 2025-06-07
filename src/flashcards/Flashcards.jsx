@@ -16,17 +16,7 @@ export function Flashcards() {
 
   const [lastAction, setLastAction] = useState("inc")
 
-  useEffect(() => {
-    if (!isLoading) {
-      setTerms(data.map((term, index, arr) => {
-        let next = 0
-        if (index + 1 < arr.length) next = index + 1
-        let prev = index - 1
-        if (index === 0) prev = arr.length - 1
-        return {...term, next, prev, hidden: false}
-      }))
-    }
-  }, [isLoading])
+  useEffect(() => { if (!isLoading) setTerms(data) }, [isLoading])
 
   useEffect(() => {
     const key = event => {
@@ -48,8 +38,7 @@ export function Flashcards() {
     return () => {
       window.removeEventListener("keydown", key)
     }
-
-  }, [number])
+  }, [number, terms])
 
   function next() {
     let nextTermIndex = terms[number].next
@@ -72,8 +61,11 @@ export function Flashcards() {
   function deleteCard(cardNumber) {
     if (terms.reduce((count, term) => !term.hidden ? count++ : count, 0) === 1)
       return
-    terms[cardNumber].hidden = true
-    setTerms([...terms])
+
+    setTerms([...terms.filter((term, i) => {
+      if (i !== cardNumber) return term
+    }), {...terms[cardNumber], hidden: true}])
+    
     if (lastAction == "inc") {
       next()
     } else if (lastAction == "dec") {
@@ -93,12 +85,12 @@ export function Flashcards() {
     <Typography variant="body1">Здесь ничего нет</Typography>
   </>)
 
-  if (data.length !== 0) return (<div className="cards-wrapper">
+  if (data.length !== 0) return (<div /*className="cards-wrapper"*/>
     <Card number={number} setNumber={setNumber} terms={terms} status={status} setStatus={setStatus}/>
-    <div className="buttons">
-      <button className="button delete" onClick={() => deleteCard(number)}>✕</button>
-      <button onClick={prev} className="button arrow">&#8592;</button>
-      <button onClick={next} className="button arrow">&#8594;</button>
+    <div /*className="buttons"*/>
+      <button /*className="button delete"*/ onClick={() => deleteCard(number)}>✕</button>
+      <button onClick={prev} /*className="button arrow"*/>&#8592;</button>
+      <button onClick={next} /*className="button arrow"*/>&#8594;</button>
     </div>
   </div>)
 }
