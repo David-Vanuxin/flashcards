@@ -56,7 +56,7 @@ export default function ViewModules(props) {
 }
 
 function Module(props) {
-	const [collapsed, setCollapsed] = useState(false)
+	const [expanded, setExpanded] = useState(false)
 	const [openDialog, setOpenDialog] = useState(false)
 	const [deleteModule] = useDeleteModuleMutation()
 
@@ -71,9 +71,9 @@ function Module(props) {
         <IconButton
           aria-label="expand row"
           size="small"
-          onClick={() => setCollapsed(!collapsed)}
+          onClick={() => setExpanded(!expanded)}
         >
-          {collapsed ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          {expanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
         </IconButton>
 			</TableCell>
 			<TableCell align="left">{props.mod.name}</TableCell>
@@ -90,7 +90,7 @@ function Module(props) {
 		</TableRow>
 		<TableRow sx={{ '& > *': { border: 0 } }}>
 			<TableCell colSpan={4} style={{ paddingBottom: 0, paddingTop: 0 }}>
-			<Collapse in={collapsed} timeout="auto" unmountOnExit>
+			<Collapse in={expanded} timeout="auto" unmountOnExit>
 			<Table sx={{ border: "none" }} size="small" aria-label="purchases">
 				<TableHead>
 				<TableRow>
