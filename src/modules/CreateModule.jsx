@@ -1,4 +1,3 @@
-import { getModule } from "./helpers"
 import { useCreateModuleMutation } from "./modulesApi"
 import { useState } from "react"
 import { Link } from "react-router";
@@ -23,7 +22,7 @@ export default function CreateModule() {
 	const [ createModule ] = useCreateModuleMutation()
 
 	function submit() {
-		createModule(getModule(name, separator, text))
+		createModule({name, separator, text})
 	}
 
 	return (<>

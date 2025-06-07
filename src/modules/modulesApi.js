@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { getModule } from "./helpers"
 
 export const modulesApi = createApi({
   reducerPath: 'modulesApi',
@@ -13,12 +14,12 @@ export const modulesApi = createApi({
     	query: id => id.toString()
     }),
     createModule: builder.mutation({
-      query: data => ({
+      query: ({name, separator, text}) => ({
         method: "post",
         headers: {
           "Content-Type":"application/json"
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(getModule(name, separator, text))
       }),
       invalidatesTags: ['Module'],
     }),

@@ -1,5 +1,4 @@
 import { Link } from "react-router";
-import { deleteModule as deleteModuleInState } from "./modulesSlice"
 import { useDispatch, useSelector } from "react-redux"
 import { useState } from "react"
 import { useGetAllModulesQuery, useGetModuleByIdQuery, useDeleteModuleMutation } from "./modulesApi"
