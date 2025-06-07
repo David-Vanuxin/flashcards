@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import { deleteModule } from "./modulesSlice"
 import { useDispatch, useSelector } from "react-redux"
 import { useState } from "react"
+import { useGetAllModulesQuery, useGetModuleByIdQuery } from "./modulesApi"
 
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -26,21 +27,32 @@ import TableCell from '@mui/material/TableCell';
 import Collapse from '@mui/material/Collapse';
 
 export default function ViewModules(props) {
-	const modules = useSelector(state => state.modules.modules)
+	// const modules = useSelector(state => state.modules.modules)
+	const { data, error, isLoading } = useGetAllModulesQuery()
 
-	if (modules.length == 0) return (<>
-		<Typography variant="body1">Чтобы создать модуль нажмите кнопку "+"</Typography>
+	if (error) return (<>
+		<Typography variant="body1">Что-то пошло не так((</Typography>
 	</>)
 
-	return (<>
-		<Table sx={{ border: "none" }} aria-label="collapsible table">
-		<TableBody>
-		{
-			modules.map(mod => <Module mod={mod} key={mod.id}/>)
-		}
-		</TableBody>
-		</Table>
+	if (isLoading) return (<>
+		<Typography variant="body1">Загрузка...</Typography>
 	</>)
+
+	if (data) {
+		if (data.length == 0) return (<>
+			<Typography variant="body1">Чтобы создать модуль нажмите кнопку "+"</Typography>
+		</>)
+
+		return (<>
+			<Table sx={{ border: "none" }} aria-label="collapsible table">
+			<TableBody>
+			{
+				data.map(mod => <Module mod={mod} key={mod.id}/>)
+			}
+			</TableBody>
+			</Table>
+		</>)
+	}
 }
 
 function Module(props) {

@@ -1,35 +1,32 @@
 import { useEffect, useState } from "react"
-import { useSelector } from "react-redux"
+// import { useSelector } from "react-redux"
 import { useParams } from "react-router";
+import { useGetModuleByIdQuery } from "../modules/modulesApi"
+import Typography from '@mui/material/Typography';
 
 import "./cards.css"
 
 export function Flashcards() {
 	const { id } = useParams()
-  const modules = useSelector(state => state.modules.modules)
+  const { data, error, isLoading } = useGetModuleByIdQuery(id)
 
   const [terms, setTerms] = useState([])
-  const [received, setReceived] = useState(false)
   const [number, setNumber] = useState(0)
   const [status, setStatus] = useState("question")
 
   const [lastAction, setLastAction] = useState("inc")
 
   useEffect(() => {
-    if (!received) {
-      setTerms(modules
-        .find(mod => mod.id == id)
-        .terms
-        .map((term, index, arr) => {
-          let next = 0
-          if (index + 1 < arr.length) next = index + 1
-          let prev = index - 1
-          if (index === 0) prev = arr.length - 1
-          return {...term, next, prev, hidden: false}
-        }))
-      setReceived(true)
+    if (!isLoading) {
+      setTerms(data.map((term, index, arr) => {
+        let next = 0
+        if (index + 1 < arr.length) next = index + 1
+        let prev = index - 1
+        if (index === 0) prev = arr.length - 1
+        return {...term, next, prev, hidden: false}
+      }))
     }
-  }, [])
+  }, [isLoading])
 
   useEffect(() => {
     const key = event => {
@@ -84,17 +81,26 @@ export function Flashcards() {
     }
   }
 
-  if (!received) return (<h1>Загрузка...</h1>)
-  else if (received) return (
-    <div className="cards-wrapper">
-      <Card number={number} setNumber={setNumber} terms={terms} status={status} setStatus={setStatus}/>
-      <div className="buttons">
-        <button className="button delete" onClick={() => deleteCard(number)}>✕</button>
-        <button onClick={prev} className="button arrow">&#8592;</button>
-        <button onClick={next} className="button arrow">&#8594;</button>
-      </div>
+  if (error) return (<>
+    <Typography variant="body1">Что-то пошло не так((</Typography>
+  </>)
+
+  if (isLoading) return (<>
+    <Typography variant="body1">Загрузка...</Typography>
+  </>)
+
+  if (terms.length === 0) return (<>
+    <Typography variant="body1">Здесь ничего нет</Typography>
+  </>)
+
+  if (data.length !== 0) return (<div className="cards-wrapper">
+    <Card number={number} setNumber={setNumber} terms={terms} status={status} setStatus={setStatus}/>
+    <div className="buttons">
+      <button className="button delete" onClick={() => deleteCard(number)}>✕</button>
+      <button onClick={prev} className="button arrow">&#8592;</button>
+      <button onClick={next} className="button arrow">&#8594;</button>
     </div>
-  )
+  </div>)
 }
 
 function Card(props) {

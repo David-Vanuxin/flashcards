@@ -1,11 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit"
-import {getModule, getId } from "./helpers"
+import { getModule, getId } from "./helpers"
 
 export const modulesSlice =  createSlice({
 	name: "modules",
 	initialState: {
 		modules: [
-			{
+/*			{
 				id: 0,
 				name: "Example",
 				terms: [
@@ -13,7 +13,7 @@ export const modulesSlice =  createSlice({
 					{answer: "апельсин", question: "orange"},
 					{answer: "2 + 2", question: "4"},
 				]
-			}
+			}*/
 		]
 	},
 	reducers: {
