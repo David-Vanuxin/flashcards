@@ -1,8 +1,8 @@
 import { Link } from "react-router";
-import { deleteModule } from "./modulesSlice"
+import { deleteModule as deleteModuleInState } from "./modulesSlice"
 import { useDispatch, useSelector } from "react-redux"
 import { useState } from "react"
-import { useGetAllModulesQuery, useGetModuleByIdQuery } from "./modulesApi"
+import { useGetAllModulesQuery, useGetModuleByIdQuery, useDeleteModuleMutation } from "./modulesApi"
 
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -56,13 +56,13 @@ export default function ViewModules(props) {
 }
 
 function Module(props) {
-	const [open, setOpen] = useState(false)
+	const [collapsed, setCollapsed] = useState(false)
 	const [openDialog, setOpenDialog] = useState(false)
-	const dispatch = useDispatch()
+	const [deleteModule] = useDeleteModuleMutation()
 
 	function onClickDelete() {
-		dispatch(deleteModule(props.mod.id))
-		setOpen(false)
+		deleteModule(props.mod.id)
+		setOpenDialog(false)
 	}
 
 	return (<>
@@ -71,9 +71,9 @@ function Module(props) {
         <IconButton
           aria-label="expand row"
           size="small"
-          onClick={() => setOpen(!open)}
+          onClick={() => setCollapsed(!collapsed)}
         >
-          {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          {collapsed ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
         </IconButton>
 			</TableCell>
 			<TableCell align="left">{props.mod.name}</TableCell>
@@ -90,7 +90,7 @@ function Module(props) {
 		</TableRow>
 		<TableRow sx={{ '& > *': { border: 0 } }}>
 			<TableCell colSpan={4} style={{ paddingBottom: 0, paddingTop: 0 }}>
-			<Collapse in={open} timeout="auto" unmountOnExit>
+			<Collapse in={collapsed} timeout="auto" unmountOnExit>
 			<Table sx={{ border: "none" }} size="small" aria-label="purchases">
 				<TableHead>
 				<TableRow>

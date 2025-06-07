@@ -1,7 +1,5 @@
-import { createModule as addModuleToState } from "./modulesSlice"
 import { getModule } from "./helpers"
 import { useCreateModuleMutation } from "./modulesApi"
-import { useDispatch } from "react-redux"
 import { useState } from "react"
 import { Link } from "react-router";
 
@@ -18,7 +16,6 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 export default function CreateModule() {
-	const dispatch = useDispatch()
 	const [name, setName] = useState("")
 	const [text, setText] = useState("")
 	const [separator, setSeparator] = useState("")
@@ -26,7 +23,6 @@ export default function CreateModule() {
 	const [ createModule ] = useCreateModuleMutation()
 
 	function submit() {
-		dispatch(addModuleToState({ name, separator, text }))
 		createModule(getModule(name, separator, text))
 	}
 
