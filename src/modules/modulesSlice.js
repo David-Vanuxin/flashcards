@@ -3,19 +3,7 @@ import { getModule, getId } from "./helpers"
 
 export const modulesSlice =  createSlice({
 	name: "modules",
-	initialState: {
-		modules: [
-/*			{
-				id: 0,
-				name: "Example",
-				terms: [
-					{answer: "яблоко", question: "apple"},
-					{answer: "апельсин", question: "orange"},
-					{answer: "2 + 2", question: "4"},
-				]
-			}*/
-		]
-	},
+	initialState: { modules: [] },
 	reducers: {
 		createModule: (state, action) => {
 			const mod = getModule(action.payload.name, action.payload.separator, action.payload.text)

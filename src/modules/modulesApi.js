@@ -9,8 +9,17 @@ export const modulesApi = createApi({
     }),
     getModuleById: builder.query({
     	query: id => id.toString()
+    }),
+    createModule: builder.mutation({
+      query: data => ({
+        method: "post",
+        headers: {
+          "Content-Type":"application/json"
+        },
+        body: JSON.stringify(data)
+      })
     })
   }),
 })
 
-export const { useGetAllModulesQuery, useGetModuleByIdQuery } = modulesApi
+export const { useGetAllModulesQuery, useGetModuleByIdQuery, useCreateModuleMutation } = modulesApi

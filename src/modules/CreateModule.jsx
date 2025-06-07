@@ -1,4 +1,6 @@
-import { createModule } from "./modulesSlice"
+import { createModule as addModuleToState } from "./modulesSlice"
+import { getModule } from "./helpers"
+import { useCreateModuleMutation } from "./modulesApi"
 import { useDispatch } from "react-redux"
 import { useState } from "react"
 import { Link } from "react-router";
@@ -20,6 +22,13 @@ export default function CreateModule() {
 	const [name, setName] = useState("")
 	const [text, setText] = useState("")
 	const [separator, setSeparator] = useState("")
+
+	const [ createModule ] = useCreateModuleMutation()
+
+	function submit() {
+		dispatch(addModuleToState({ name, separator, text }))
+		createModule(getModule(name, separator, text))
+	}
 
 	return (<>
 		<Typography variant="h5">Создать новый модуль</Typography>
@@ -51,7 +60,7 @@ export default function CreateModule() {
       rows={6}
     />
     <Box sx={{ mt: 1, display: 'flex', justifyContent: 'right', gap: 1 }}>
-			<Button component={Link} to="/" variant="contained" onClick={() => dispatch(createModule({name, separator, text}))}>Сохранить</Button>
+			<Button component={Link} to="/" variant="contained" onClick={submit}>Сохранить</Button>
 			<Button component={Link} to="/" variant="outlined">Отмена</Button>
     </Box>
 	</>)
