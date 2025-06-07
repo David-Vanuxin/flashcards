@@ -8,11 +8,6 @@ function getTerms(splitted) {
 	})
 }
 
-export function getId(array) {
-	if (array.length != 0) return array[array.length - 1].id + 1
-	return 0
-}
-
 export function getModule(name, separator, text) {
 	return {
 		name,
