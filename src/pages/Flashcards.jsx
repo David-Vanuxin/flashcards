@@ -44,6 +44,11 @@ export default function Flashcards() {
     }
   }, [number, terms])
 
+  // This algorithm provide hign load to CPU 
+  // For see it just do this:
+  // 1) Open task manager
+  // 2) Hide many cards
+  // 3) Click to arrows 
   function next() {
     let nextTermIndex = terms[number].next
     while(terms[nextTermIndex].hidden)

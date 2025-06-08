@@ -13,6 +13,8 @@ export const modulesApi = createApi({
     getModuleById: builder.query({
     	query: id => id.toString(),
       transformResponse: res => {
+        // It's bad solution for making endless cards swipe (carousel) 
+        // See also ../Flashcards.jsx
         return {
           name: res.data.name,
           terms: res.data.terms.map((term, index, arr) => {
