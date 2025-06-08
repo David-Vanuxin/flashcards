@@ -6,7 +6,6 @@ import store from "./store"
 
 import { Layout } from "./layout"
 import { Home } from "./pages/home"
-import { Info } from "./pages/info"
 
 import { Flashcards } from "./flashcards/Flashcards"
 import CreateModule from "./modules/CreateModule"
@@ -22,7 +21,6 @@ root.render(
 	<Route element={<Layout />}>
 		<Route index element={<Home/>}/>
 		<Route path="/create" element={<CreateModule/>}/>
-		<Route path="/info" element={<Info/>}/>
 		<Route path="/flashcards/:id" element={<Flashcards/>}/>
 	</Route>
 	</Routes>
