@@ -5,10 +5,10 @@ import { Provider } from "react-redux"
 import store from "./store"
 
 import { Layout } from "./layout"
-import { Home } from "./pages/home"
 
-import { Flashcards } from "./flashcards/Flashcards"
-import CreateModule from "./modules/CreateModule"
+import Home from "./pages/Home"
+import Flashcards from "./pages/Flashcards"
+import CreateModule from "./pages/CreateModule"
 
 import '@fontsource/roboto/400.css';
 

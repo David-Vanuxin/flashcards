@@ -1,4 +1,4 @@
-import { useCreateModuleMutation } from "./modulesApi"
+import { useCreateModuleMutation } from "../modules/modulesApi"
 import { useState } from "react"
 import { Link } from "react-router";
 

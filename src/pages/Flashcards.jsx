@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react"
-// import { useSelector } from "react-redux"
 import { useParams } from "react-router";
 import { useGetModuleByIdQuery } from "../modules/modulesApi"
 import Typography from '@mui/material/Typography';
 
 import "./cards.css"
 
-export function Flashcards() {
+export default function Flashcards() {
 	const { id } = useParams()
   const { data, error, isLoading } = useGetModuleByIdQuery(id)
 

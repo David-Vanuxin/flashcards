@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 
 import ViewModules from "../modules/ViewModules"
 
-export function Home() {
+export default function Home() {
 	return (<>
 		<Box>
 			<Typography variant="h5">Все модули</Typography>
