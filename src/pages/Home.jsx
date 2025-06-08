@@ -13,7 +13,7 @@ import TableCell from '@mui/material/TableCell';
 export default function Home() {
 	return (<>
 		<Box>
-			<Typography variant="h5">Все модули</Typography>
+			<Typography sx={{textAlign: "center"}} variant="h5">Все модули</Typography>
 			<ListModules />
 			<Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
 				<Fab 

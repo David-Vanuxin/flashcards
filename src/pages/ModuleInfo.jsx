@@ -45,12 +45,12 @@ export default function ModuleInfo(props) {
 		</>)
 	
 		return (<>
-			<Typography variant="h5">{data.name}</Typography>
-			<Box>
-				<IconButton size="small" component={Link} to={`/flashcards/${id}`}>
+			<Typography sx={{textAlign: "center"}} variant="h5">{data.name}</Typography>
+			<Box sx={{ display: "flex", justifyContent: "space-around", }}>
+				<IconButton size="large" component={Link} to={`/flashcards/${id}`}>
 					<ArrowOutwardIcon />
 				</IconButton>
-				<IconButton size="small" onClick={() => setOpenDialog(true)}>
+				<IconButton size="large" onClick={() => setOpenDialog(true)}>
 					<DeleteIcon />
 				</IconButton>
 			</Box>
