@@ -1,8 +1,9 @@
-import { Link } from "react-router";
+import { Link, useParams, useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux"
 import { useState } from "react"
-import { useGetAllModulesQuery, useGetModuleByIdQuery, useDeleteModuleMutation } from "./modulesApi"
+import { useGetModuleByIdQuery, useDeleteModuleMutation } from "../modules/modulesApi"
 
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -25,9 +26,10 @@ import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import Collapse from '@mui/material/Collapse';
 
-export default function ViewModules(props) {
-	// const modules = useSelector(state => state.modules.modules)
-	const { data, error, isLoading } = useGetAllModulesQuery()
+export default function ModuleInfo(props) {
+	const { id } = useParams()
+	const { data, error, isLoading } = useGetModuleByIdQuery(id)
+	const [openDialog, setOpenDialog] = useState(false)
 
 	if (error) return (<>
 		<Typography variant="body1">Что-то пошло не так((</Typography>
@@ -39,22 +41,65 @@ export default function ViewModules(props) {
 
 	if (data) {
 		if (data.length == 0) return (<>
-			<Typography variant="body1">Чтобы создать модуль нажмите кнопку "+"</Typography>
+			<Typography variant="body1">Модуль пуст</Typography>
 		</>)
-
+	
 		return (<>
+			<Typography variant="h5">{data.name}</Typography>
+			<Box>
+				<IconButton size="small" component={Link} to={`/flashcards/${id}`}>
+					<ArrowOutwardIcon />
+				</IconButton>
+				<IconButton size="small" onClick={() => setOpenDialog(true)}>
+					<DeleteIcon />
+				</IconButton>
+			</Box>
 			<Table sx={{ border: "none" }} aria-label="collapsible table">
 			<TableBody>
 			{
-				data.map(mod => <Module mod={mod} key={mod.id}/>)
+				data.terms.map(t => <Term term={t} key={t.id}/>)
 			}
 			</TableBody>
 			</Table>
+			<DeleteConfirm id={id} name={data.name} openDialog={openDialog} setOpenDialog={setOpenDialog}/>
 		</>)
 	}
 }
 
-function Module(props) {
+function DeleteConfirm(props) {
+	const navigate = useNavigate()
+	const [deleteModule] = useDeleteModuleMutation()
+
+	function onClickDelete() {
+		deleteModule(props.id)
+		props.setOpenDialog(false)
+		navigate("/")
+	}
+
+	return (<>
+		<Dialog open={props.openDialog}>
+			<DialogTitle>Подтвердите действие</DialogTitle>
+			<DialogContent>
+				<DialogContentText>Удалить модуль <span>{props.name}</span>?</DialogContentText>
+				<DialogActions>
+					<Button onClick={onClickDelete} variant="outlined">Удалить</Button>
+					<Button onClick={() => props.setOpenDialog(false)} variant="contained">Отмена</Button>
+				</DialogActions>
+			</DialogContent>
+		</Dialog>
+	</>)
+}
+
+function Term(props) {
+	return (<>
+		<TableRow sx={{ '& > *': { border: 0 } }}>
+			<TableCell>{props.term.question}</TableCell>
+			<TableCell>{props.term.answer}</TableCell>
+		</TableRow>
+	</>)
+}
+
+/*function Module(props) {
 	const [expanded, setExpanded] = useState(false)
 	const [openDialog, setOpenDialog] = useState(false)
 	const [deleteModule] = useDeleteModuleMutation()
@@ -118,12 +163,4 @@ function Module(props) {
 		</Dialog>
 	</>)
 }
-
-function Term(props) {
-	return (<>
-		<TableRow sx={{ '& > *': { border: 0 } }}>
-			<TableCell>{props.term.question}</TableCell>
-			<TableCell>{props.term.answer}</TableCell>
-		</TableRow>
-	</>)
-}
+}*/

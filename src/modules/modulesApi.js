@@ -12,13 +12,18 @@ export const modulesApi = createApi({
     }),
     getModuleById: builder.query({
     	query: id => id.toString(),
-      transformResponse: res => res.map((term, index, arr) => {
-        let next = 0
-        if (index + 1 < arr.length) next = index + 1
-        let prev = index - 1
-        if (index === 0) prev = arr.length - 1
-        return {...term, next, prev, hidden: false}
-      }) 
+      transformResponse: res => {
+        return {
+          name: res.data.name,
+          terms: res.data.terms.map((term, index, arr) => {
+            let next = 0
+            if (index + 1 < arr.length) next = index + 1
+            let prev = index - 1
+            if (index === 0) prev = arr.length - 1
+            return {...term, next, prev, hidden: false}
+          })
+        }
+      }
     }),
     createModule: builder.mutation({
       query: ({name, separator, text}) => ({

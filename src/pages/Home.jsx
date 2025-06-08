@@ -10,8 +10,6 @@ import TableBody from '@mui/material/TableBody';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 
-import ViewModules from "../modules/ViewModules"
-
 export default function Home() {
 	return (<>
 		<Box>

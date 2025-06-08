@@ -15,7 +15,7 @@ export default function Flashcards() {
 
   const [lastAction, setLastAction] = useState("inc")
 
-  useEffect(() => { if (!isLoading) setTerms(data) }, [isLoading])
+  useEffect(() => { if (!isLoading) setTerms(data.terms) }, [isLoading])
 
   useEffect(() => {
     const key = event => {
@@ -84,14 +84,17 @@ export default function Flashcards() {
     <Typography variant="body1">Здесь ничего нет</Typography>
   </>)
 
-  if (data.length !== 0) return (<div /*className="cards-wrapper"*/>
+  if (data.length !== 0) return (<>
+    <Typography variant="h5">{data.name}</Typography>
+    <div /*className="cards-wrapper"*/>
     <Card number={number} setNumber={setNumber} terms={terms} status={status} setStatus={setStatus}/>
     <div /*className="buttons"*/>
       <button /*className="button delete"*/ onClick={() => deleteCard(number)}>✕</button>
       <button onClick={prev} /*className="button arrow"*/>&#8592;</button>
       <button onClick={next} /*className="button arrow"*/>&#8594;</button>
     </div>
-  </div>)
+    </div>
+  </>)
 }
 
 function Card(props) {
