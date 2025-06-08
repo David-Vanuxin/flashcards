@@ -48,10 +48,10 @@ export default function ModuleInfo(props) {
 			<Typography sx={{textAlign: "center"}} variant="h5">{data.name}</Typography>
 			<Box sx={{ display: "flex", justifyContent: "space-around", }}>
 				<IconButton size="large" component={Link} to={`/flashcards/${id}`}>
-					<ArrowOutwardIcon />
+					<ArrowOutwardIcon fontSize="inherit"/>
 				</IconButton>
 				<IconButton size="large" onClick={() => setOpenDialog(true)}>
-					<DeleteIcon />
+					<DeleteIcon fontSize="inherit"/>
 				</IconButton>
 			</Box>
 			<Table sx={{ border: "none" }} aria-label="collapsible table">

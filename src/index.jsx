@@ -12,6 +12,7 @@ import CreateModule from "./pages/CreateModule"
 import ModuleInfo from "./pages/ModuleInfo"
 
 import '@fontsource/roboto/400.css';
+import './app.css'
 
 const root = createRoot(document.getElementById('app'));
 root.render(

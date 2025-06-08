@@ -2,8 +2,13 @@ import { useEffect, useState } from "react"
 import { useParams } from "react-router";
 import { useGetModuleByIdQuery } from "../modules/modulesApi"
 import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import ClearIcon from '@mui/icons-material/Clear';
 
-import "./cards.css"
+import "./flashcards.css"
 
 export default function Flashcards() {
 	const { id } = useParams()
@@ -85,15 +90,21 @@ export default function Flashcards() {
   </>)
 
   if (data.length !== 0) return (<>
-    <Typography variant="h5">{data.name}</Typography>
-    <div /*className="cards-wrapper"*/>
-    <Card number={number} setNumber={setNumber} terms={terms} status={status} setStatus={setStatus}/>
-    <div /*className="buttons"*/>
-      <button /*className="button delete"*/ onClick={() => deleteCard(number)}>✕</button>
-      <button onClick={prev} /*className="button arrow"*/>&#8592;</button>
-      <button onClick={next} /*className="button arrow"*/>&#8594;</button>
-    </div>
-    </div>
+    <Typography sx={{ textAlign: "center" }} variant="h5">{data.name}</Typography>
+    <Box sx={{ height: "70vh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+      <Card sx={{ mt: 4 }} number={number} setNumber={setNumber} terms={terms} status={status} setStatus={setStatus}/>
+      <Box sx={{ mt: 2, display: "flex", gap: "2rem" }}>
+        <IconButton onClick={() => deleteCard(number)} size="large">
+          <ClearIcon fontSize="inherit"/>
+        </IconButton>
+        <IconButton onClick={prev} size="large">
+          <ArrowBackIcon fontSize="inherit"/>
+        </IconButton>
+        <IconButton onClick={next} size="large">
+          <ArrowForwardIcon fontSize="inherit"/>
+        </IconButton>
+      </Box>
+    </Box>
   </>)
 }
 
