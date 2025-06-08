@@ -93,8 +93,8 @@ function DeleteConfirm(props) {
 function Term(props) {
 	return (<>
 		<TableRow sx={{ '& > *': { border: 0 } }}>
-			<TableCell>{props.term.question}</TableCell>
 			<TableCell>{props.term.answer}</TableCell>
+			<TableCell>{props.term.question}</TableCell>
 		</TableRow>
 	</>)
 }

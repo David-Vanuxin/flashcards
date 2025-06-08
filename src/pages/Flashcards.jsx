@@ -63,12 +63,16 @@ export default function Flashcards() {
   }
 
   function deleteCard(cardNumber) {
-    if (terms.reduce((count, term) => !term.hidden ? count++ : count, 0) === 1)
+    // Important! count + 1, not count++
+    // arrow funtction returns variable "count",
+    // thats increment in this case useless
+    if (terms.reduce((count, term) => !term.hidden ? count + 1 : count, 0) === 1)
       return
 
-    setTerms([...terms.filter((term, i) => {
-      if (i !== cardNumber) return term
-    }), {...terms[cardNumber], hidden: true}])
+    const newTerms = terms.map(t => Object.assign({}, t))
+    newTerms[cardNumber].hidden = true
+
+    setTerms(newTerms)
     
     if (lastAction == "inc") {
       next()
