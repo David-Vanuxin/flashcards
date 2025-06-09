@@ -90,8 +90,7 @@ function TermsList({ terms }) {
 
   function removeAllSelected() {
     setSelected([])
-    // PROBLEM
-    // All checkboxes still checked
+    setAllSelected(state => !state)
   }
 
   useEffect(() => {
@@ -126,13 +125,9 @@ function Term({ term: { id, answer, question }, select, removeSelection, all }) 
   const [checked, setChecked] = useState(false)
 
   useEffect(() => {
-    setChecked(all)
-    if (!all && checked) {
-      removeSelection(id)
-    }
-    else if (all && !checked) {
-      select(id)
-    }
+    if (all !== checked) setChecked(all)
+    if (all && !checked) select(id) 
+    if (!all && checked) removeSelection(id)
   }, [all])
 
   function handleCheck(event) {
@@ -159,10 +154,6 @@ function BottomMenu({ selected, removeAllSelected }) {
         <Typography variant="button" gutterBottom sx={{ color: "text.primary", p: 1, m: 1 }}>Выбрано: {selected.length}</Typography>
         <Button variant="contained">Изменить</Button>
         <Button>Удалить</Button>
-{/*        PROMBLEM
-        if this button is clicked
-        selected became empty
-        but checkboxes still checked*/}
         <Button onClick={removeAllSelected} variant="outlined">Отменить</Button>
       </Toolbar>
     </AppBar>
