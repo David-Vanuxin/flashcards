@@ -12,6 +12,7 @@ export const modulesApi = createApi({
     }),
     getModuleById: builder.query({
     	query: id => id.toString(),
+      providesTags: ['Module'],
       transformResponse: res => {
         // It's bad solution for making endless cards swipe (carousel) 
         // See also ../Flashcards.jsx
@@ -46,8 +47,19 @@ export const modulesApi = createApi({
         }
       }),
       invalidatesTags: ['Module'],
+    }),
+    renameModule: builder.mutation({
+      query: ({id, name}) => ({
+        method: "put",
+        url: id.toString(),
+        headers: {
+          "Content-Type":"application/json"
+        },
+        body: JSON.stringify({ name }),
+      }),
+      invalidatesTags: ['Module'],
     })
   }),
 })
 
-export const { useGetAllModulesQuery, useGetModuleByIdQuery, useCreateModuleMutation, useDeleteModuleMutation } = modulesApi
+export const { useGetAllModulesQuery, useGetModuleByIdQuery, useCreateModuleMutation, useDeleteModuleMutation, useRenameModuleMutation } = modulesApi

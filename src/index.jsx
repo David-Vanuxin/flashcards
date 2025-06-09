@@ -9,6 +9,7 @@ import { Layout } from "./layout"
 import Home from "./pages/Home"
 import Flashcards from "./pages/Flashcards"
 import CreateModule from "./pages/CreateModule"
+import EditModule from "./pages/EditModule"
 import ModuleInfo from "./pages/ModuleInfo"
 
 import '@fontsource/roboto/400.css';
@@ -25,6 +26,7 @@ root.render(
 		<Route path="/create" element={<CreateModule/>}/>
 		<Route path="/flashcards/:id" element={<Flashcards/>}/>
 		<Route path="/module/:id" element={<ModuleInfo/>}/>
+		<Route path="/module/:id/edit" element={<EditModule/>}/>
 	</Route>
 	</Routes>
 	</BrowserRouter>
