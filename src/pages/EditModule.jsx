@@ -73,47 +73,43 @@ function SaveButtonsGroup({ show, save, cancel }) {
 
 function TermsList({ terms }) {
   const [selected, setSelected] = useState([])
-  const [allSelected, setAllSelected] = useState(false)
   const [botMenuHidden, setBotMenuHidden] = useState(true)
+  const [generalCheckboxChecked, setGeneralCheckboxChecked] = useState(false)
 
-  function addSelected(id) {
-    setSelected(selected => [...selected, id])
-  }
-
-  function removeSelection(id) {
-    setSelected(selected => selected.filter(termId => termId !== id))
-  }
-
-  function handleCheck(event) {
-    setAllSelected(event.target.checked)
+  function selectAll() {
+    setSelected(selected => [...terms.map(term => term.id)])
   }
 
   function removeAllSelected() {
     setSelected([])
-    setAllSelected(state => !state)
+  }
+
+  function handleGeneralCheckboxChange(event) {
+    setGeneralCheckboxChecked(checked => {
+      if (!checked) selectAll()// current state value still false
+      else removeAllSelected() 
+
+      return !checked
+    })
   }
 
   useEffect(() => {
-    if (selected.length === 0) {
-      setAllSelected(false)
-      setBotMenuHidden(true)
-    }
-    if (selected.length === terms.length) setAllSelected(true)
-    if (selected.length) setBotMenuHidden(false)
+    if (selected.length === terms.length) setGeneralCheckboxChecked(true)
+    else setGeneralCheckboxChecked(false)
   }, [selected])
 
   return (<>
     <Table sx={{ mb: 5 }}>
     <TableHead>
     <TableRow>
-      <TableCell><Checkbox checked={allSelected} onChange={handleCheck} size="small" />Все</TableCell>
+      <TableCell><Checkbox checked={generalCheckboxChecked} onChange={handleGeneralCheckboxChange} size="small" />Все</TableCell>
       <TableCell>Термин</TableCell>
       <TableCell>Значение</TableCell>
     </TableRow>
     </TableHead>
     <TableBody>
     {
-      terms.map(t => <Term all={allSelected} setSelected={setSelected} removeSelection={removeSelection} select={addSelected} term={t} key={t.id}/>)
+      terms.map(t => <Term selected={selected} setSelected={setSelected} term={t} key={t.id}/>)
     }
     </TableBody>
     </Table>
@@ -121,25 +117,39 @@ function TermsList({ terms }) {
   </>)
 }
 
-function Term({ term: { id, answer, question }, select, removeSelection, all }) {
+function Term({ term: { id, answer, question }, selected, setSelected }) {
   const [checked, setChecked] = useState(false)
 
   useEffect(() => {
-    if (all !== checked) setChecked(all)
-    if (all && !checked) select(id) 
-    if (!all && checked) removeSelection(id)
-  }, [all])
+    if (selected.includes(id)) setChecked(true)
+    else setChecked(false)
+  }, [selected])
 
-  function handleCheck(event) {
-    setChecked(event.target.checked)
-    if (!checked) select(id)
-    else removeSelection(id)
+  function addSelected() {
+    setSelected(arr => {
+      const updatedArr = [...arr]
+      if (!arr.includes(id)) updatedArr.push(id)
+      return updatedArr
+    })
+  }
+
+  function removeSelection() {
+    setSelected(selected => selected.filter(termId => termId !== id))
+  }
+
+  function handleCheckboxChange() {
+    setChecked(checked => {
+      if (!checked) addSelected(id)
+      else removeSelection(id)
+
+      return !checked
+    })
   }
 
   return (<>
     <TableRow sx={{ '& > *': { border: 0 } }}>
       <TableCell>
-        <Checkbox size="small" checked={checked} onChange={handleCheck}/>
+        <Checkbox size="small" checked={checked} onChange={handleCheckboxChange}/>
       </TableCell>
       <TableCell>{answer}</TableCell>
       <TableCell>{question}</TableCell>
