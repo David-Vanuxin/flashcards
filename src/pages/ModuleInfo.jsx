@@ -1,7 +1,7 @@
 import { Link, useParams, useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux"
 import { useState } from "react"
-import { useGetModuleByIdQuery, useDeleteModuleMutation } from "../modules/modulesApi"
+import { useGetModuleByIdQuery, useDeleteModuleMutation } from "../api/modulesApi"
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';

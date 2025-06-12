@@ -1,6 +1,6 @@
 import { Link, useParams, useNavigate } from "react-router";
 import { useState, useEffect, useId } from "react";
-import { useGetModuleByIdQuery, useRenameModuleMutation } from "../modules/modulesApi"
+import { useGetModuleByIdQuery, useRenameModuleMutation } from "../api/modulesApi"
 
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
