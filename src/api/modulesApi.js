@@ -50,8 +50,27 @@ export const modulesApi = createApi({
         body: { name }
       }),
       invalidatesTags: ['Module'],
+    }),
+    deleteTerms: builder.mutation({
+      async queryFn({ moduleId, deletedTerms }, api, extraOptions, baseQuery) {
+        if (deletedTerms === 0) throw new Error("You can't delete 0 terms!")
+
+        // Performing multiple requests
+        const results = await Promise.all(deletedTerms.map(id => fetch(`http://0.0.0.0:3000/term/${id}`, {
+          method: "delete",
+          headers: {"Content-Type":"application/json"},
+        })))
+      },
+      // cache updates manually (optimistic update)
+      async onQueryStarted({ moduleId, deletedTerms }, { dispatch, queryFulfilled }) {
+        const deleteTermUpdates = dispatch(modulesApi.util.updateQueryData('getModuleById', moduleId, mod => {
+          mod.terms = mod.terms.filter(term => !deletedTerms.includes(term.id))
+        }))
+      }
+      // this don't worked with queryFn 
+      // invalidatesTags: ['Module'],
     })
   }),
 })
 
-export const { useGetAllModulesQuery, useGetModuleByIdQuery, useCreateModuleMutation, useDeleteModuleMutation, useRenameModuleMutation } = modulesApi
+export const { useGetAllModulesQuery, useGetModuleByIdQuery, useCreateModuleMutation, useDeleteModuleMutation, useRenameModuleMutation, useDeleteTermsMutation } = modulesApi

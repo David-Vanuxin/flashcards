@@ -1,6 +1,6 @@
 import { Link, useParams, useNavigate } from "react-router";
 import { useState, useEffect, useId } from "react";
-import { useGetModuleByIdQuery, useRenameModuleMutation } from "../api/modulesApi"
+import { useGetModuleByIdQuery, useRenameModuleMutation, useDeleteTermsMutation } from "../api/modulesApi"
 
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
@@ -113,7 +113,7 @@ function TermsList({ terms }) {
     }
     </TableBody>
     </Table>
-    <BottomMenu selected={selected} removeAllSelected={removeAllSelected}/>
+    <BottomMenu selected={selected} removeAllSelected={removeAllSelected} setBotMenuHidden={setBotMenuHidden}/>
   </>)
 }
 
@@ -126,7 +126,7 @@ function Term({ term: { id, answer, question }, selected, setSelected }) {
   }, [selected])
 
   function addSelected() {
-    setSelected(arr => {
+    setSelected(arr => {// throws error, but work
       const updatedArr = [...arr]
       if (!arr.includes(id)) updatedArr.push(id)
       return updatedArr
@@ -157,13 +157,22 @@ function Term({ term: { id, answer, question }, selected, setSelected }) {
   </>)
 }
 
-function BottomMenu({ selected, removeAllSelected }) {
+function BottomMenu({ selected, removeAllSelected, setBotMenuHidden }) {
+  const [deleteTerms] = useDeleteTermsMutation()
+  const { id } = useParams()
+
+  function handleClickDelete() {
+    deleteTerms({ moduleId: id, deletedTerms: selected })// throws error, but work
+    removeAllSelected()
+    setBotMenuHidden(true)
+  } 
+
   if (selected.length !== 0) return (<>
     <AppBar position="fixed" sx={{ bgcolor: 'white', top: 'auto', bottom: 0 }}>
       <Toolbar sx={{ display: "flex", justifyContent: "center", gap: 1 }}>
         <Typography variant="button" gutterBottom sx={{ color: "text.primary", p: 1, m: 1 }}>Выбрано: {selected.length}</Typography>
         <Button variant="contained">Изменить</Button>
-        <Button>Удалить</Button>
+        <Button onClick={handleClickDelete}>Удалить</Button>
         <Button onClick={removeAllSelected} variant="outlined">Отменить</Button>
       </Toolbar>
     </AppBar>
