@@ -5,6 +5,7 @@ export const modulesApi = createApi({
   reducerPath: 'modulesApi',
   baseQuery: fetchBaseQuery({ baseUrl: 'http://0.0.0.0:3000/module/' }),
   tagTypes: ['Module'],
+  isJsonContentType: (headers) => true, 
   endpoints: builder => ({
     getAllModules: builder.query({
     	query: () => "",
@@ -31,10 +32,7 @@ export const modulesApi = createApi({
     createModule: builder.mutation({
       query: ({name, separator, text}) => ({
         method: "post",
-        headers: {
-          "Content-Type":"application/json"
-        },
-        body: JSON.stringify(getModule(name, separator, text))
+        body: getModule(name, separator, text)
       }),
       invalidatesTags: ['Module'],
     }),
@@ -42,9 +40,6 @@ export const modulesApi = createApi({
       query: id => ({
         method: "delete",
         url: id.toString(),
-        headers: {
-          "Content-Type":"application/json"
-        }
       }),
       invalidatesTags: ['Module'],
     }),
@@ -52,10 +47,7 @@ export const modulesApi = createApi({
       query: ({id, name}) => ({
         method: "put",
         url: id.toString(),
-        headers: {
-          "Content-Type":"application/json"
-        },
-        body: JSON.stringify({ name }),
+        body: { name }
       }),
       invalidatesTags: ['Module'],
     })
