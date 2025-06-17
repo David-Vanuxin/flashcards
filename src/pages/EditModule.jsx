@@ -215,7 +215,7 @@ function BottomMenu({ selected, removeAllSelected, setBotMenuHidden }) {
   const { id } = useParams()
 
   function handleClickDelete() {
-    deleteTerms({ moduleId: id, deletedTerms: selected })// throws error, but work
+    deleteTerms({ moduleId: id, deletedTerms: selected })
     removeAllSelected()
     setBotMenuHidden(true)
   } 

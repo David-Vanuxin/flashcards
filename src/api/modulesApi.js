@@ -61,6 +61,8 @@ export const modulesApi = createApi({
           method: "delete",
           headers: {"Content-Type":"application/json"},
         })))
+
+        return results
       },
       // cache updates manually (update even error)
       async onQueryStarted({ moduleId, deletedTerms }, { dispatch, queryFulfilled }) {
