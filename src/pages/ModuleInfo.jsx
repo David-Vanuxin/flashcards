@@ -40,10 +40,6 @@ export default function ModuleInfo(props) {
 	</>)
 
 	if (data) {
-		if (data.length == 0) return (<>
-			<Typography variant="body1">Модуль пуст</Typography>
-		</>)
-	
 		return (<>
 			<Typography sx={{textAlign: "center"}} variant="h5">{data.name}</Typography>
 			<Box sx={{ display: "flex", justifyContent: "space-around", }}>
@@ -54,16 +50,25 @@ export default function ModuleInfo(props) {
 					<DeleteIcon fontSize="inherit"/>
 				</IconButton>
 			</Box>
-			<Table sx={{ border: "none" }} aria-label="collapsible table">
-			<TableBody>
-			{
-				data.terms.map(t => <Term term={t} key={t.id}/>)
-			}
-			</TableBody>
-			</Table>
+			<TermsList terms={data.terms}/>
 			<DeleteConfirm id={id} name={data.name} openDialog={openDialog} setOpenDialog={setOpenDialog}/>
 		</>)
 	}
+}
+
+function TermsList({ terms }) {
+	if (terms.length === 0) return (<>
+		<Typography variant="body1">Модуль пуст</Typography>
+	</>)
+	else return (<>
+		<Table sx={{ border: "none" }} aria-label="collapsible table">
+		<TableBody>
+		{
+			terms.map(t => <Term term={t} key={t.id}/>)
+		}
+		</TableBody>
+		</Table>
+	</>)
 }
 
 function DeleteConfirm(props) {
