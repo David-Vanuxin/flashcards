@@ -224,7 +224,6 @@ function BottomMenu({ selected, removeAllSelected, setBotMenuHidden }) {
     <AppBar position="fixed" sx={{ bgcolor: 'white', top: 'auto', bottom: 0 }}>
       <Toolbar sx={{ display: "flex", justifyContent: "center", gap: 1 }}>
         <Typography variant="button" gutterBottom sx={{ color: "text.primary", p: 1, m: 1 }}>Выбрано: {selected.length}</Typography>
-        <Button variant="contained">Изменить</Button>
         <Button onClick={handleClickDelete}>Удалить</Button>
         <Button onClick={removeAllSelected} variant="outlined">Отменить</Button>
       </Toolbar>
