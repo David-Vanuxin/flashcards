@@ -18,6 +18,7 @@ export const modulesApi = createApi({
         // It's bad solution for making endless cards swipe (carousel) 
         // See also ../Flashcards.jsx
         return {
+          id: res.data.id,
           name: res.data.name,
           terms: res.data.terms.map((term, index, arr) => {
             let next = 0
@@ -61,7 +62,7 @@ export const modulesApi = createApi({
           headers: {"Content-Type":"application/json"},
         })))
       },
-      // cache updates manually (optimistic update)
+      // cache updates manually (update even error)
       async onQueryStarted({ moduleId, deletedTerms }, { dispatch, queryFulfilled }) {
         const deleteTermUpdates = dispatch(modulesApi.util.updateQueryData('getModuleById', moduleId, mod => {
           mod.terms = mod.terms.filter(term => !deletedTerms.includes(term.id))
@@ -69,8 +70,46 @@ export const modulesApi = createApi({
       }
       // this don't worked with queryFn 
       // invalidatesTags: ['Module'],
-    })
+    }),
+    editTerm: builder.mutation({
+      async queryFn(arg, api, extraOptions, baseQuery) {
+        if (!arg.id) throw new Error("term.id is required") 
+
+        const term = Object.assign({}, arg)
+        const termId = term.id
+        delete term.id
+        delete term.module
+
+        const result = await fetch(`http://0.0.0.0:3000/term/${termId}`, {
+          method: "put",
+          body: JSON.stringify(term),
+          headers: {"Content-Type":"application/json"},
+        })
+
+        return result
+      },
+      async onQueryStarted(term, { dispatch, queryFulfilled }) {
+        const update = dispatch(modulesApi.util.updateQueryData("getModuleById", term.module.toString(), mod => {
+          const termIndex = mod.terms.findIndex(t => t.id === term.id)
+          return {
+            ...mod,
+            terms: [
+              ...mod.terms.slice(0, termIndex),
+              { ...mod.terms[termIndex], ...term },
+              ...mod.terms.slice(termIndex + 1),
+            ]
+          }
+        }))
+
+        try {
+          await queryFulfilled()
+        } catch {
+          update.undo()
+        }
+      },
+      invalidatesTags: ['Module']// not worked without this, I don't not why
+    }),
   }),
 })
 
-export const { useGetAllModulesQuery, useGetModuleByIdQuery, useCreateModuleMutation, useDeleteModuleMutation, useRenameModuleMutation, useDeleteTermsMutation } = modulesApi
+export const { useGetAllModulesQuery, useGetModuleByIdQuery, useCreateModuleMutation, useDeleteModuleMutation, useRenameModuleMutation, useDeleteTermsMutation, useEditTermMutation } = modulesApi

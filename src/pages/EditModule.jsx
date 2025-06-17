@@ -1,6 +1,6 @@
 import { Link, useParams, useNavigate } from "react-router";
 import { useState, useEffect, useId } from "react";
-import { useGetModuleByIdQuery, useRenameModuleMutation, useDeleteTermsMutation } from "../api/modulesApi"
+import { useGetModuleByIdQuery, useRenameModuleMutation, useDeleteTermsMutation, useEditTermMutation } from "../api/modulesApi"
 
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
@@ -14,8 +14,9 @@ import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import { grey } from '@mui/material/colors';
-
+import ClearIcon from '@mui/icons-material/Clear';
+import DoneIcon from '@mui/icons-material/Done';
+import IconButton from '@mui/material/IconButton';
 
 export default function EditModule() {
   const { id } = useParams()
@@ -151,9 +152,61 @@ function Term({ term: { id, answer, question }, selected, setSelected }) {
       <TableCell>
         <Checkbox size="small" checked={checked} onChange={handleCheckboxChange}/>
       </TableCell>
-      <TableCell>{answer}</TableCell>
-      <TableCell>{question}</TableCell>
+      <TableCell><EditionGroup type="answer" termId={id} defaultValue={answer} label="Термин"/></TableCell>
+      <TableCell><EditionGroup type="question" termId={id} defaultValue={question} label="Значение"/></TableCell>
     </TableRow>
+  </>)
+}
+
+function EditionGroup({ defaultValue, label, type, termId }) {
+  const [buttonsVisibility, setButtonsVisibility] = useState(false)
+  const [textValue, setTextValue] = useState(defaultValue)
+  const { id } = useParams()
+  const [editTerm, result] = useEditTermMutation()
+
+  useEffect(() => {
+    if (result.isError) console.error(result.error)
+  }, [result])
+
+  function saveChanges() {
+    editTerm({
+      id: termId,
+      module: id,
+      [type]: textValue,
+    })
+    setButtonsVisibility(false)
+  }
+
+  function changeHandler(event) {
+    setTextValue(event.target.value)
+    if (event.target.value !== defaultValue && event.target.value !== "") {
+      setButtonsVisibility(true)
+    } else setButtonsVisibility(false)
+  }
+
+  function cancel() {
+    setTextValue(defaultValue)
+    setButtonsVisibility(false)
+  }
+
+  return (<>
+    <Box>
+      <TextField value={textValue} onChange={changeHandler} sx={{ width: "100%" }} size="small" label={label} variant="outlined"></TextField>
+      <EditionConfirmButtonsGroup confirm={saveChanges} cancel={cancel} show={buttonsVisibility}/>
+    </Box>
+  </>)
+}
+
+function EditionConfirmButtonsGroup({ show, confirm, cancel }) {
+  if (show) return (<>
+    <Box sx={{ position: "fixed", zIndex: 1000 }}>
+      <Button variant="contained" size="small">
+        <DoneIcon onClick={confirm} fontSize="medium"/>
+      </Button>
+      <Button variant="outlined" size="small">
+        <ClearIcon onClick={cancel} fontSize="medium"/>
+      </Button>
+    </Box>
   </>)
 }
 
