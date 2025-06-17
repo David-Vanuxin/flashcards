@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router";
-import { useGetAllModulesQuery } from "../modules/modulesApi"
+import { useGetAllModulesQuery } from "../api/modulesApi"
 
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';

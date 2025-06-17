@@ -1,7 +1,7 @@
 import { Link, useParams, useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux"
 import { useState } from "react"
-import { useGetModuleByIdQuery, useDeleteModuleMutation } from "../modules/modulesApi"
+import { useGetModuleByIdQuery, useDeleteModuleMutation } from "../api/modulesApi"
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -11,6 +11,7 @@ import IconButton from '@mui/material/IconButton';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
+import EditIcon from '@mui/icons-material/Edit';
 
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -30,6 +31,7 @@ export default function ModuleInfo(props) {
 	const { id } = useParams()
 	const { data, error, isLoading } = useGetModuleByIdQuery(id)
 	const [openDialog, setOpenDialog] = useState(false)
+	const navigate = useNavigate()
 
 	if (error) return (<>
 		<Typography variant="body1">Что-то пошло не так((</Typography>
@@ -45,6 +47,9 @@ export default function ModuleInfo(props) {
 			<Box sx={{ display: "flex", justifyContent: "space-around", }}>
 				<IconButton size="large" component={Link} to={`/flashcards/${id}`}>
 					<ArrowOutwardIcon fontSize="inherit"/>
+				</IconButton>
+				<IconButton size="large" onClick={() => navigate(`/module/${id}/edit`)}>
+					<EditIcon fontSize="inherit"/>
 				</IconButton>
 				<IconButton size="large" onClick={() => setOpenDialog(true)}>
 					<DeleteIcon fontSize="inherit"/>

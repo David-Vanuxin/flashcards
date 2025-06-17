@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router";
-import { useGetModuleByIdQuery } from "../modules/modulesApi"
+import { useGetModuleByIdQuery } from "../api/modulesApi"
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
