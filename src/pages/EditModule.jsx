@@ -190,7 +190,7 @@ function EditionGroup({ defaultValue, label, type, termId }) {
   }
 
   return (<>
-    <Box>
+    <Box sx={{ display: "flex", justifyContent: "right", }}>
       <TextField value={textValue} onChange={changeHandler} sx={{ width: "100%" }} size="small" label={label} variant="outlined"></TextField>
       <EditionConfirmButtonsGroup confirm={saveChanges} cancel={cancel} show={buttonsVisibility}/>
     </Box>
@@ -199,12 +199,12 @@ function EditionGroup({ defaultValue, label, type, termId }) {
 
 function EditionConfirmButtonsGroup({ show, confirm, cancel }) {
   if (show) return (<>
-    <Box sx={{ position: "fixed", zIndex: 1000 }}>
-      <Button variant="contained" size="small">
-        <DoneIcon onClick={confirm} fontSize="medium"/>
+    <Box sx={{ position: "absolute", zIndex: 1000, mt: "2px", transform: "translateY(calc(100% + 6px))" }}>
+      <Button sx={{ mr: "2px" }} onClick={confirm} variant="contained" size="small">
+        <DoneIcon fontSize="medium"/>
       </Button>
-      <Button variant="outlined" size="small">
-        <ClearIcon onClick={cancel} fontSize="medium"/>
+      <Button onClick={cancel} variant="outlined" size="small">
+        <ClearIcon fontSize="medium"/>
       </Button>
     </Box>
   </>)
