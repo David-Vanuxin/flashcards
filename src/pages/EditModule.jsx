@@ -1,4 +1,4 @@
-import { Link, useParams, useNavigate } from "react-router"
+import { useParams } from "react-router"
 import { useState, useEffect, useId } from "react"
 import {
   useGetModuleByIdQuery,
@@ -21,7 +21,6 @@ import AppBar from "@mui/material/AppBar"
 import Toolbar from "@mui/material/Toolbar"
 import ClearIcon from "@mui/icons-material/Clear"
 import DoneIcon from "@mui/icons-material/Done"
-import IconButton from "@mui/material/IconButton"
 
 export default function EditModule() {
   const { id } = useParams()
@@ -79,8 +78,6 @@ export default function EditModule() {
 }
 
 function SaveButtonsGroup({ show, save, cancel }) {
-  const { id } = useParams()
-
   if (show)
     return (
       <>
@@ -98,18 +95,17 @@ function SaveButtonsGroup({ show, save, cancel }) {
 
 function TermsList({ terms }) {
   const [selected, setSelected] = useState([])
-  const [botMenuHidden, setBotMenuHidden] = useState(true)
   const [generalCheckboxChecked, setGeneralCheckboxChecked] = useState(false)
 
   function selectAll() {
-    setSelected(selected => [...terms.map(term => term.id)])
+    setSelected([...terms.map(term => term.id)])
   }
 
   function removeAllSelected() {
     setSelected([])
   }
 
-  function handleGeneralCheckboxChange(event) {
+  function handleGeneralCheckboxChange() {
     setGeneralCheckboxChecked(checked => {
       if (!checked)
         selectAll() // current state value still false
@@ -152,11 +148,7 @@ function TermsList({ terms }) {
           ))}
         </TableBody>
       </Table>
-      <BottomMenu
-        selected={selected}
-        removeAllSelected={removeAllSelected}
-        setBotMenuHidden={setBotMenuHidden}
-      />
+      <BottomMenu selected={selected} removeAllSelected={removeAllSelected} />
     </>
   )
 }
@@ -302,14 +294,13 @@ function EditionConfirmButtonsGroup({ show, confirm, cancel }) {
     )
 }
 
-function BottomMenu({ selected, removeAllSelected, setBotMenuHidden }) {
+function BottomMenu({ selected, removeAllSelected }) {
   const [deleteTerms] = useDeleteTermsMutation()
   const { id } = useParams()
 
   function handleClickDelete() {
     deleteTerms({ moduleId: id, deletedTerms: selected })
     removeAllSelected()
-    setBotMenuHidden(true)
   }
 
   if (selected.length !== 0)

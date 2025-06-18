@@ -1,5 +1,4 @@
 import { Link, useParams, useNavigate } from "react-router"
-import { useDispatch, useSelector } from "react-redux"
 import { useState } from "react"
 import {
   useGetModuleByIdQuery,
@@ -11,26 +10,19 @@ import Button from "@mui/material/Button"
 import Typography from "@mui/material/Typography"
 import DeleteIcon from "@mui/icons-material/Delete"
 import IconButton from "@mui/material/IconButton"
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown"
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp"
 import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward"
 import EditIcon from "@mui/icons-material/Edit"
-
 import Dialog from "@mui/material/Dialog"
 import DialogTitle from "@mui/material/DialogTitle"
 import DialogActions from "@mui/material/DialogActions"
 import DialogContent from "@mui/material/DialogContent"
 import DialogContentText from "@mui/material/DialogContentText"
-
-import TableContainer from "@mui/material/TableContainer"
 import Table from "@mui/material/Table"
 import TableBody from "@mui/material/TableBody"
-import TableHead from "@mui/material/TableHead"
 import TableRow from "@mui/material/TableRow"
 import TableCell from "@mui/material/TableCell"
-import Collapse from "@mui/material/Collapse"
 
-export default function ModuleInfo(props) {
+export default function ModuleInfo() {
   const { id } = useParams()
   const { data, error, isLoading } = useGetModuleByIdQuery(id)
   const [openDialog, setOpenDialog] = useState(false)

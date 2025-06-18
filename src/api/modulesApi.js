@@ -5,7 +5,7 @@ export const modulesApi = createApi({
   reducerPath: "modulesApi",
   baseQuery: fetchBaseQuery({ baseUrl: "http://0.0.0.0:3000/module/" }),
   tagTypes: ["Module"],
-  isJsonContentType: headers => true,
+  isJsonContentType: () => true,
   endpoints: builder => ({
     getAllModules: builder.query({
       query: () => "",
@@ -53,7 +53,7 @@ export const modulesApi = createApi({
       invalidatesTags: ["Module"],
     }),
     deleteTerms: builder.mutation({
-      async queryFn({ moduleId, deletedTerms }, api, extraOptions, baseQuery) {
+      async queryFn({ deletedTerms }) {
         if (deletedTerms === 0) throw new Error("You can't delete 0 terms!")
 
         // Performing multiple requests
@@ -69,11 +69,8 @@ export const modulesApi = createApi({
         return results
       },
       // cache updates manually (update even error)
-      async onQueryStarted(
-        { moduleId, deletedTerms },
-        { dispatch, queryFulfilled },
-      ) {
-        const deleteTermUpdates = dispatch(
+      async onQueryStarted({ moduleId, deletedTerms }, { dispatch }) {
+        /*const deleteTermUpdates = */ dispatch(
           modulesApi.util.updateQueryData("getModuleById", moduleId, mod => {
             mod.terms = mod.terms.filter(
               term => !deletedTerms.includes(term.id),
@@ -85,7 +82,7 @@ export const modulesApi = createApi({
       // invalidatesTags: ['Module'],
     }),
     editTerm: builder.mutation({
-      async queryFn(arg, api, extraOptions, baseQuery) {
+      async queryFn(arg) {
         if (!arg.id) throw new Error("term.id is required")
 
         const term = Object.assign({}, arg)

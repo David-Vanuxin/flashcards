@@ -34,7 +34,7 @@ export default function Home() {
   )
 }
 
-function ListModules(props) {
+function ListModules() {
   const { data, error, isLoading } = useGetAllModulesQuery()
 
   if (error)

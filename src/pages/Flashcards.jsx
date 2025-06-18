@@ -129,7 +129,6 @@ export default function Flashcards() {
           <Card
             sx={{ mt: 4 }}
             number={number}
-            setNumber={setNumber}
             terms={terms}
             status={status}
             setStatus={setStatus}
@@ -151,7 +150,7 @@ export default function Flashcards() {
 }
 
 function Card(props) {
-  const { number, setNumber, terms, status, setStatus } = props
+  const { number, terms, status, setStatus } = props
 
   const [cardWrapper, setCardWrapper] = useState("flip-card")
   const [cardInner, setCardInner] = useState("flip-card-inner")
