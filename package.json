@@ -1,7 +1,8 @@
 {
   "scripts": {
     "dev": "vite --host",
-    "build": "vite build"
+    "build": "vite build",
+    "format": "prettier src --write"
   },
   "devDependencies": {
     "@vitejs/plugin-react-swc": "^3.7.2",
