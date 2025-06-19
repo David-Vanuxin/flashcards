@@ -3,7 +3,7 @@ import { getModule } from "./helpers"
 
 export const modulesApi = createApi({
   reducerPath: "modulesApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://0.0.0.0:3000/module/" }),
+  baseQuery: fetchBaseQuery({ baseUrl: `http://${import.meta.env.VITE_API}/module/` }),
   tagTypes: ["Module"],
   isJsonContentType: () => true,
   endpoints: builder => ({
@@ -59,7 +59,7 @@ export const modulesApi = createApi({
         // Performing multiple requests
         const results = await Promise.all(
           deletedTerms.map(id =>
-            fetch(`http://0.0.0.0:3000/term/${id}`, {
+            fetch(`http://${import.meta.env.VITE_API}/term/${id}`, {
               method: "delete",
               headers: { "Content-Type": "application/json" },
             }),
@@ -90,7 +90,7 @@ export const modulesApi = createApi({
         delete term.id
         delete term.module
 
-        const result = await fetch(`http://0.0.0.0:3000/term/${termId}`, {
+        const result = await fetch(`http://${import.meta.env.VITE_API}/term/${termId}`, {
           method: "put",
           body: JSON.stringify(term),
           headers: { "Content-Type": "application/json" },
