@@ -14,23 +14,32 @@ import ModuleInfo from "./pages/ModuleInfo"
 
 import "@fontsource/roboto/400.css"
 import CssBaseline from "@mui/material/CssBaseline"
+import { ThemeProvider, createTheme } from "@mui/material/styles"
+
+const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+  },
+})
 
 const root = createRoot(document.getElementById("app"))
 root.render(
   <React.StrictMode>
-    <CssBaseline />
-    <Provider store={store}>
-      <BrowserRouter>
-        <Routes>
-          <Route element={<Layout />}>
-            <Route index element={<Home />} />
-            <Route path="/create" element={<CreateModule />} />
-            <Route path="/flashcards/:id" element={<Flashcards />} />
-            <Route path="/module/:id" element={<ModuleInfo />} />
-            <Route path="/module/:id/edit" element={<EditModule />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </Provider>
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
+      <Provider store={store}>
+        <BrowserRouter>
+          <Routes>
+            <Route element={<Layout />}>
+              <Route index element={<Home />} />
+              <Route path="/create" element={<CreateModule />} />
+              <Route path="/flashcards/:id" element={<Flashcards />} />
+              <Route path="/module/:id" element={<ModuleInfo />} />
+              <Route path="/module/:id/edit" element={<EditModule />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </Provider>
+    </ThemeProvider>
   </React.StrictMode>,
 )
