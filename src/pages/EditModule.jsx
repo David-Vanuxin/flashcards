@@ -306,10 +306,7 @@ function BottomMenu({ selected, removeAllSelected }) {
   if (selected.length !== 0)
     return (
       <>
-        <AppBar
-          position="fixed"
-          sx={{ bgcolor: "white", top: "auto", bottom: 0 }}
-        >
+        <AppBar position="fixed" sx={{ top: "auto", bottom: 0 }}>
           <Toolbar sx={{ display: "flex", justifyContent: "center", gap: 1 }}>
             <Typography
               variant="button"
