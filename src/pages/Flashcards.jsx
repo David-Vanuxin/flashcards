@@ -9,6 +9,8 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward"
 import ClearIcon from "@mui/icons-material/Clear"
 
 import "./flashcards.css"
+import Paper from "@mui/material/Paper"
+import { styled } from "@mui/material/styles"
 
 export default function Flashcards() {
   const { id } = useParams()
@@ -149,6 +151,16 @@ export default function Flashcards() {
     )
 }
 
+const CardPaper = styled(Paper)`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  user-select: none;
+`
+
 function Card(props) {
   const { number, terms, status, setStatus } = props
 
@@ -160,8 +172,8 @@ function Card(props) {
       setCardWrapper("flip-card")
       setCardInner("flip-card-inner")
     } else {
-      setCardWrapper("flip-card rotate-animate")
-      setCardInner("flip-card-inner rotate-animate")
+      setCardWrapper("flip-card rotate")
+      setCardInner("flip-card-inner rotate")
     }
   }, [status])
 
@@ -173,14 +185,18 @@ function Card(props) {
   return (
     <div onMouseDown={changeStatus} className={cardWrapper}>
       <div className={cardInner}>
-        <div className="flip-card-front card">
-          <div style={{ padding: "1rem" }}>{terms[number].answer}</div>
+        <div className="card">
+          <CardPaper square={false} elevation={24}>
+            <Typography variant="body1">{terms[number].answer}</Typography>
+          </CardPaper>
         </div>
         <div className="flip-card-back card">
           {/*Without this checking you will see answer of next card when card rotate animation is playing*/}
-          <div style={{ padding: "1rem" }}>
-            {status == "answer" ? terms[number].question : ""}
-          </div>
+          <CardPaper square={false} elevation={24}>
+            <Typography variant="body1">
+              {status == "answer" ? terms[number].question : ""}
+            </Typography>
+          </CardPaper>
         </div>
       </div>
     </div>
