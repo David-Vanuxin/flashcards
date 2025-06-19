@@ -3,7 +3,9 @@ import { getModule } from "./helpers"
 
 export const modulesApi = createApi({
   reducerPath: "modulesApi",
-  baseQuery: fetchBaseQuery({ baseUrl: `http://${import.meta.env.VITE_API}/module/` }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: `http://${import.meta.env.VITE_API}/module/`,
+  }),
   tagTypes: ["Module"],
   isJsonContentType: () => true,
   endpoints: builder => ({
@@ -90,11 +92,14 @@ export const modulesApi = createApi({
         delete term.id
         delete term.module
 
-        const result = await fetch(`http://${import.meta.env.VITE_API}/term/${termId}`, {
-          method: "put",
-          body: JSON.stringify(term),
-          headers: { "Content-Type": "application/json" },
-        })
+        const result = await fetch(
+          `http://${import.meta.env.VITE_API}/term/${termId}`,
+          {
+            method: "put",
+            body: JSON.stringify(term),
+            headers: { "Content-Type": "application/json" },
+          },
+        )
 
         return result
       },

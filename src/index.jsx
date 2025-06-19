@@ -13,11 +13,12 @@ import EditModule from "./pages/EditModule"
 import ModuleInfo from "./pages/ModuleInfo"
 
 import "@fontsource/roboto/400.css"
-import "./app.css"
+import CssBaseline from "@mui/material/CssBaseline"
 
 const root = createRoot(document.getElementById("app"))
 root.render(
   <React.StrictMode>
+    <CssBaseline />
     <Provider store={store}>
       <BrowserRouter>
         <Routes>
