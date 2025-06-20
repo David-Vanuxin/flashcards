@@ -1,10 +1,9 @@
 import { useCreateModuleMutation } from "../api/modulesApi"
 import { useState } from "react"
-import { Link } from "react-router"
+import { useNavigate } from "react-router"
 
 import Box from "@mui/material/Box"
 import TextField from "@mui/material/TextField"
-import Button from "@mui/material/Button"
 import List from "@mui/material/List"
 import ListItem from "@mui/material/ListItem"
 import ListItemText from "@mui/material/ListItemText"
@@ -14,6 +13,8 @@ import AccordionDetails from "@mui/material/AccordionDetails"
 import AccordionSummary from "@mui/material/AccordionSummary"
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
 
+import TermsListCreationForm from "../widjets/TermsListCreationForm"
+
 export default function CreateModule() {
   const [name, setName] = useState("")
   const [text, setText] = useState("")
@@ -21,8 +22,15 @@ export default function CreateModule() {
 
   const [createModule] = useCreateModuleMutation()
 
+  const navigate = useNavigate()
+
   function submit() {
     createModule({ name, separator, text })
+    navigate("/")
+  }
+
+  function cancel() {
+    navigate("/")
   }
 
   return (
@@ -70,22 +78,11 @@ export default function CreateModule() {
           </List>
         </AccordionDetails>
       </Accordion>
-      <TextField
-        fullWidth
-        onChange={event => setText(event.target.value)}
-        label="Впишите сюда пары значений"
-        placeholder="Образец: яблоко _ apple"
-        multiline
-        rows={6}
+      <TermsListCreationForm
+        submit={submit}
+        cancel={cancel}
+        setText={setText}
       />
-      <Box sx={{ mt: 1, display: "flex", justifyContent: "right", gap: 1 }}>
-        <Button component={Link} to="/" variant="contained" onClick={submit}>
-          Сохранить
-        </Button>
-        <Button component={Link} to="/" variant="outlined">
-          Отмена
-        </Button>
-      </Box>
     </>
   )
 }
