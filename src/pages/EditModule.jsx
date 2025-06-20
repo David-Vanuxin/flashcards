@@ -23,6 +23,7 @@ import ClearIcon from "@mui/icons-material/Clear"
 import DoneIcon from "@mui/icons-material/Done"
 
 import SaveButtonsGroup from "../widjets/SaveButtonsGroup"
+import DeleteConfirmDialog from "../widjets/DeleteConfirmDialog"
 
 export default function EditModule() {
   const { id } = useParams()
@@ -284,9 +285,11 @@ function EditionConfirmButtonsGroup({ show, confirm, cancel }) {
 function BottomMenu({ selected, removeAllSelected }) {
   const [deleteTerms] = useDeleteTermsMutation()
   const { id } = useParams()
+  const [openDeleteConfirmDialog, setOpenDeleteConfirmDialog] = useState(false)
 
   function handleClickDelete() {
     deleteTerms({ moduleId: id, deletedTerms: selected })
+    setOpenDeleteConfirmDialog(false)
     removeAllSelected()
   }
 
@@ -302,12 +305,20 @@ function BottomMenu({ selected, removeAllSelected }) {
             >
               Выбрано: {selected.length}
             </Typography>
-            <Button onClick={handleClickDelete}>Удалить</Button>
+            <Button onClick={() => setOpenDeleteConfirmDialog(true)}>
+              Удалить
+            </Button>
             <Button onClick={removeAllSelected} variant="outlined">
               Отменить
             </Button>
           </Toolbar>
         </AppBar>
+        <DeleteConfirmDialog
+          open={openDeleteConfirmDialog}
+          text={`Вы действительно хотите удалить выбранные термины (${selected.length})?`}
+          submit={handleClickDelete}
+          cancel={() => setOpenDeleteConfirmDialog(false)}
+        />
       </>
     )
 }
