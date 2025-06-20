@@ -1,6 +1,6 @@
 import TextField from "@mui/material/TextField"
 
-export default function TermsListCreationForm({ setText }) {
+export default function TermsListCreationForm({ setText, sx }) {
   return (
     <>
       <TextField
@@ -10,7 +10,7 @@ export default function TermsListCreationForm({ setText }) {
         placeholder="Образец: яблоко _ apple"
         multiline
         rows={6}
-        sx={{ mb: 1 }}
+        sx={{ mb: 1, ...sx }}
       />
     </>
   )

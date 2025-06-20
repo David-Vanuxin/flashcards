@@ -21,12 +21,22 @@ import Table from "@mui/material/Table"
 import TableBody from "@mui/material/TableBody"
 import TableRow from "@mui/material/TableRow"
 import TableCell from "@mui/material/TableCell"
+import TextField from "@mui/material/TextField"
+
+import CreateButton from "../widjets/CreateButton"
+import TermsListCreationForm from "../widjets/TermsListCreationForm"
+import SaveButtonsGroup from "../widjets/SaveButtonsGroup"
 
 export default function ModuleInfo() {
   const { id } = useParams()
   const { data, error, isLoading } = useGetModuleByIdQuery(id)
-  const [openDialog, setOpenDialog] = useState(false)
+  const [openDeleteConfirmDialog, setOpenDeleteConfirmDialog] = useState(false)
   const navigate = useNavigate()
+  const [openAddTermsDialog, setOpenAddTermsDialog] = useState(false)
+
+  function showAddTermsDialog() {
+    setOpenAddTermsDialog(true)
+  }
 
   if (error)
     return (
@@ -58,16 +68,24 @@ export default function ModuleInfo() {
           >
             <EditIcon fontSize="inherit" />
           </IconButton>
-          <IconButton size="large" onClick={() => setOpenDialog(true)}>
+          <IconButton
+            size="large"
+            onClick={() => setOpenDeleteConfirmDialog(true)}
+          >
             <DeleteIcon fontSize="inherit" />
           </IconButton>
         </Box>
         <TermsList terms={data.terms} />
+        <CreateButton action={showAddTermsDialog} />
+        <AddTermsDialog
+          openDialog={openAddTermsDialog}
+          setOpenDialog={setOpenAddTermsDialog}
+        />
         <DeleteConfirm
           id={id}
           name={data.name}
-          openDialog={openDialog}
-          setOpenDialog={setOpenDialog}
+          openDialog={openDeleteConfirmDialog}
+          setOpenDialog={setOpenDeleteConfirmDialog}
         />
       </>
     )
@@ -123,6 +141,35 @@ function DeleteConfirm(props) {
             >
               Отмена
             </Button>
+          </DialogActions>
+        </DialogContent>
+      </Dialog>
+    </>
+  )
+}
+
+function AddTermsDialog({ setOpenDialog, openDialog }) {
+  const [text, setText] = useState("")
+  const [separator, setSeparator] = useState("")
+
+  return (
+    <>
+      <Dialog open={openDialog}>
+        <DialogTitle sx={{ pb: 0 }}>Добавить термины</DialogTitle>
+        <DialogContent sx={{ width: "80vw" }}>
+          <TextField
+            sx={{ mt: 1 }}
+            onChange={event => setSeparator(event.target.value)}
+            label="Разделитель"
+            variant="outlined"
+            placeholder="Например: _"
+          />
+          <TermsListCreationForm sx={{ mt: 1 }} setText={setText} />
+          <DialogActions>
+            <SaveButtonsGroup
+              save={() => setOpenDialog(false)}
+              cancel={() => setOpenDialog(false)}
+            />
           </DialogActions>
         </DialogContent>
       </Dialog>
