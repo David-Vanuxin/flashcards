@@ -1,8 +1,6 @@
-import { Link, useNavigate } from "react-router"
+import { useNavigate } from "react-router"
 import { useGetAllModulesQuery } from "../api/modulesApi"
 
-import Fab from "@mui/material/Fab"
-import AddIcon from "@mui/icons-material/Add"
 import Typography from "@mui/material/Typography"
 import Box from "@mui/material/Box"
 import Table from "@mui/material/Table"
@@ -10,7 +8,11 @@ import TableBody from "@mui/material/TableBody"
 import TableRow from "@mui/material/TableRow"
 import TableCell from "@mui/material/TableCell"
 
+import CreateButton from "../widjets/CreateButton"
+
 export default function Home() {
+  const navigate = useNavigate()
+
   return (
     <>
       <Box>
@@ -18,17 +20,7 @@ export default function Home() {
           Все модули
         </Typography>
         <ListModules />
-        <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
-          <Fab
-            component={Link}
-            to="/create"
-            size="medium"
-            color="primary"
-            aria-label="add"
-          >
-            <AddIcon />
-          </Fab>
-        </Box>
+        <CreateButton action={() => navigate("/create")} />
       </Box>
     </>
   )

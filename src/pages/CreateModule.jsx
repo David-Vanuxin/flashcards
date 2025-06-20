@@ -14,6 +14,7 @@ import AccordionSummary from "@mui/material/AccordionSummary"
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
 
 import TermsListCreationForm from "../widjets/TermsListCreationForm"
+import SaveButtonsGroup from "../widjets/SaveButtonsGroup"
 
 export default function CreateModule() {
   const [name, setName] = useState("")
@@ -78,11 +79,8 @@ export default function CreateModule() {
           </List>
         </AccordionDetails>
       </Accordion>
-      <TermsListCreationForm
-        submit={submit}
-        cancel={cancel}
-        setText={setText}
-      />
+      <TermsListCreationForm setText={setText} />
+      <SaveButtonsGroup save={submit} cancel={cancel} />
     </>
   )
 }

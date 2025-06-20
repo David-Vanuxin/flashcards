@@ -1,7 +1,6 @@
 import TextField from "@mui/material/TextField"
-import SaveButtonsGroup from "./SaveButtonsGroup"
 
-export default function TermsListCreationForm({ submit, cancel, setText }) {
+export default function TermsListCreationForm({ setText }) {
   return (
     <>
       <TextField
@@ -13,7 +12,6 @@ export default function TermsListCreationForm({ submit, cancel, setText }) {
         rows={6}
         sx={{ mb: 1 }}
       />
-      <SaveButtonsGroup save={submit} cancel={cancel} />
     </>
   )
 }

@@ -26,12 +26,14 @@ import SaveButtonsGroup from "../widjets/SaveButtonsGroup"
 
 export default function EditModule() {
   const { id } = useParams()
-  const { data, isLoading  } = useGetModuleByIdQuery(id)
+  const { data, isLoading } = useGetModuleByIdQuery(id)
   const [showSaveButtonsGroup, setShowSaveButtonsGroup] = useState(false)
   const [renameModule] = useRenameModuleMutation()
   const [newModuleName, setNewModuleName] = useState("Загрузка...")
 
-  useEffect(() => {if (!isLoading) setNewModuleName(data.name)}, [isLoading])
+  useEffect(() => {
+    if (!isLoading) setNewModuleName(data.name)
+  }, [isLoading])
 
   function changeHandler(event) {
     if (event.target.value !== data.name) {
