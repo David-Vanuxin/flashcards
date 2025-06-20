@@ -1,6 +1,5 @@
 import TextField from "@mui/material/TextField"
-import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
+import SaveButtonsGroup from "./SaveButtonsGroup"
 
 export default function TermsListCreationForm({ submit, cancel, setText }) {
   return (
@@ -12,15 +11,9 @@ export default function TermsListCreationForm({ submit, cancel, setText }) {
         placeholder="Образец: яблоко _ apple"
         multiline
         rows={6}
+        sx={{ mb: 1 }}
       />
-      <Box sx={{ mt: 1, display: "flex", justifyContent: "right", gap: 1 }}>
-        <Button variant="contained" onClick={submit}>
-          Сохранить
-        </Button>
-        <Button onClick={cancel} variant="outlined">
-          Отмена
-        </Button>
-      </Box>
+      <SaveButtonsGroup save={submit} cancel={cancel} />
     </>
   )
 }

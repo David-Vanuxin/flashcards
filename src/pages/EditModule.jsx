@@ -1,5 +1,5 @@
 import { useParams } from "react-router"
-import { useState, useEffect, useId } from "react"
+import { useState, useEffect } from "react"
 import {
   useGetModuleByIdQuery,
   useRenameModuleMutation,
@@ -22,21 +22,23 @@ import Toolbar from "@mui/material/Toolbar"
 import ClearIcon from "@mui/icons-material/Clear"
 import DoneIcon from "@mui/icons-material/Done"
 
+import SaveButtonsGroup from "../widjets/SaveButtonsGroup"
+
 export default function EditModule() {
   const { id } = useParams()
-  const field = useId()
-  const { data } = useGetModuleByIdQuery(id)
-  const [saveBtnEnabled, setSaveBtnEnabled] = useState(false)
+  const { data, isLoading  } = useGetModuleByIdQuery(id)
+  const [showSaveButtonsGroup, setShowSaveButtonsGroup] = useState(false)
   const [renameModule] = useRenameModuleMutation()
-  const [newModuleName, setNewModuleName] = useState("")
+  const [newModuleName, setNewModuleName] = useState("Загрузка...")
+
+  useEffect(() => {if (!isLoading) setNewModuleName(data.name)}, [isLoading])
 
   function changeHandler(event) {
     if (event.target.value !== data.name) {
-      setSaveBtnEnabled(true)
-      console.log(event.target.value)
+      setShowSaveButtonsGroup(true)
       setNewModuleName(event.target.value)
     } else {
-      setSaveBtnEnabled(false)
+      setShowSaveButtonsGroup(false)
       setNewModuleName("")
     }
   }
@@ -44,13 +46,13 @@ export default function EditModule() {
   function saveNewName() {
     if (newModuleName) {
       renameModule({ id, name: newModuleName })
-      setSaveBtnEnabled(false)
+      setShowSaveButtonsGroup(false)
     }
   }
 
   function cancel() {
-    document.getElementById(field).value = data.name
-    setSaveBtnEnabled(false)
+    setNewModuleName(data.name)
+    setShowSaveButtonsGroup(false)
   }
 
   if (data) {
@@ -58,39 +60,22 @@ export default function EditModule() {
       <>
         <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
           <TextField
-            id={field}
             onChange={changeHandler}
-            defaultValue={data.name}
+            value={newModuleName}
             label="Имя модуля"
             variant="outlined"
             placeholder="Введите новое имя"
           />
-          <SaveButtonsGroup
-            show={saveBtnEnabled}
-            save={saveNewName}
-            cancel={cancel}
-          />
+          {showSaveButtonsGroup ? (
+            <SaveButtonsGroup save={saveNewName} cancel={cancel} />
+          ) : (
+            ""
+          )}
           <TermsList terms={data.terms} />
         </Box>
       </>
     )
   }
-}
-
-function SaveButtonsGroup({ show, save, cancel }) {
-  if (show)
-    return (
-      <>
-        <Box sx={{ display: "flex", justifyContent: "end", gap: 1 }}>
-          <Button variant="contained" onClick={save}>
-            Сохранить
-          </Button>
-          <Button variant="outlined" onClick={cancel}>
-            Отмена
-          </Button>
-        </Box>
-      </>
-    )
 }
 
 function TermsList({ terms }) {
