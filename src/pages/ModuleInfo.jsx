@@ -7,7 +7,6 @@ import {
 } from "../api/modulesApi"
 
 import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
 import Typography from "@mui/material/Typography"
 import DeleteIcon from "@mui/icons-material/Delete"
 import IconButton from "@mui/material/IconButton"
@@ -17,7 +16,6 @@ import Dialog from "@mui/material/Dialog"
 import DialogTitle from "@mui/material/DialogTitle"
 import DialogActions from "@mui/material/DialogActions"
 import DialogContent from "@mui/material/DialogContent"
-import DialogContentText from "@mui/material/DialogContentText"
 import Table from "@mui/material/Table"
 import TableBody from "@mui/material/TableBody"
 import TableRow from "@mui/material/TableRow"
@@ -27,6 +25,7 @@ import TextField from "@mui/material/TextField"
 import CreateButton from "../widjets/CreateButton"
 import TermsListCreationForm from "../widjets/TermsListCreationForm"
 import SaveButtonsGroup from "../widjets/SaveButtonsGroup"
+import DeleteConfirmDialog from "../widjets/DeleteConfirmDialog"
 
 export default function ModuleInfo() {
   const { id } = useParams()
@@ -37,6 +36,14 @@ export default function ModuleInfo() {
 
   function showAddTermsDialog() {
     setOpenAddTermsDialog(true)
+  }
+
+  const [deleteModule] = useDeleteModuleMutation()
+
+  function handleClickDelete() {
+    deleteModule(id)
+    setOpenDeleteConfirmDialog(false)
+    navigate("/")
   }
 
   if (error)
@@ -82,11 +89,11 @@ export default function ModuleInfo() {
           openDialog={openAddTermsDialog}
           setOpenDialog={setOpenAddTermsDialog}
         />
-        <DeleteConfirm
-          id={id}
-          name={data.name}
-          openDialog={openDeleteConfirmDialog}
-          setOpenDialog={setOpenDeleteConfirmDialog}
+        <DeleteConfirmDialog
+          open={openDeleteConfirmDialog}
+          text={`Удалить модуль ${data.name}?`}
+          submit={handleClickDelete}
+          cancel={() => setOpenDeleteConfirmDialog(false)}
         />
       </>
     )
@@ -112,41 +119,6 @@ function TermsList({ terms }) {
         </Table>
       </>
     )
-}
-
-function DeleteConfirm(props) {
-  const navigate = useNavigate()
-  const [deleteModule] = useDeleteModuleMutation()
-
-  function onClickDelete() {
-    deleteModule(props.id)
-    props.setOpenDialog(false)
-    navigate("/")
-  }
-
-  return (
-    <>
-      <Dialog open={props.openDialog}>
-        <DialogTitle>Подтвердите действие</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Удалить модуль <span>{props.name}</span>?
-          </DialogContentText>
-          <DialogActions>
-            <Button onClick={onClickDelete} variant="outlined">
-              Удалить
-            </Button>
-            <Button
-              onClick={() => props.setOpenDialog(false)}
-              variant="contained"
-            >
-              Отмена
-            </Button>
-          </DialogActions>
-        </DialogContent>
-      </Dialog>
-    </>
-  )
 }
 
 function AddTermsDialog({ setOpenDialog, openDialog }) {
