@@ -130,6 +130,23 @@ export const modulesApi = createApi({
       },
       invalidatesTags: ["Module"], // not worked without this, I don't not why
     }),
+    addNewTerms: builder.mutation({
+      async queryFn({ moduleId, text, separator }) {
+        const { terms } = getModule("UNUSED_STRING", separator, text)
+
+        const results = await Promise.all(
+          terms.map(term =>
+            fetch(`http://${import.meta.env.VITE_API}/term/`, {
+              method: "post",
+              body: JSON.stringify({ ...term, module: moduleId }),
+              headers: { "Content-Type": "application/json" },
+            }),
+          ),
+        )
+        return results
+      },
+      invalidatesTags: ["Module"],
+    }),
   }),
 })
 
@@ -141,4 +158,5 @@ export const {
   useRenameModuleMutation,
   useDeleteTermsMutation,
   useEditTermMutation,
+  useAddNewTermsMutation,
 } = modulesApi

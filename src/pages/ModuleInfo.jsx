@@ -3,6 +3,7 @@ import { useState } from "react"
 import {
   useGetModuleByIdQuery,
   useDeleteModuleMutation,
+  useAddNewTermsMutation,
 } from "../api/modulesApi"
 
 import Box from "@mui/material/Box"
@@ -149,8 +150,11 @@ function DeleteConfirm(props) {
 }
 
 function AddTermsDialog({ setOpenDialog, openDialog }) {
+  const { id } = useParams()
   const [text, setText] = useState("")
   const [separator, setSeparator] = useState("")
+
+  const [addNewTerms] = useAddNewTermsMutation()
 
   return (
     <>
@@ -167,7 +171,10 @@ function AddTermsDialog({ setOpenDialog, openDialog }) {
           <TermsListCreationForm sx={{ mt: 1 }} setText={setText} />
           <DialogActions>
             <SaveButtonsGroup
-              save={() => setOpenDialog(false)}
+              save={() => {
+                addNewTerms({ moduleId: id, text, separator })
+                setOpenDialog(false)
+              }}
               cancel={() => setOpenDialog(false)}
             />
           </DialogActions>
