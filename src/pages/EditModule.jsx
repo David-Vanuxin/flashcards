@@ -5,6 +5,7 @@ import {
   useRenameModuleMutation,
   useDeleteTermsMutation,
   useEditTermMutation,
+  useMoveTermsMutation,
 } from "../api/modulesApi"
 
 import Typography from "@mui/material/Typography"
@@ -290,6 +291,7 @@ function EditionConfirmButtonsGroup({ show, confirm, cancel }) {
 
 function BottomMenu({ selected, removeAllSelected }) {
   const [deleteTerms] = useDeleteTermsMutation()
+  const [moveTerms] = useMoveTermsMutation()
   const { id } = useParams()
   const [openDeleteConfirmDialog, setOpenDeleteConfirmDialog] = useState(false)
   const [openMoveConfirmDialog, setOpenMoveConfirmDialog] = useState(false)
@@ -301,9 +303,7 @@ function BottomMenu({ selected, removeAllSelected }) {
   }
 
   function handleClickMove(id) {
-    console.log(
-      `This terms: ${selected.join(", ")}\nwill be moved to module: ${id}`,
-    )
+    moveTerms({ terms: selected, destination: id })
     setOpenMoveConfirmDialog(false)
     removeAllSelected()
   }

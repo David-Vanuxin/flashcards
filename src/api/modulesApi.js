@@ -58,7 +58,6 @@ export const modulesApi = createApi({
       async queryFn({ deletedTerms }) {
         if (deletedTerms === 0) throw new Error("You can't delete 0 terms!")
 
-        // Performing multiple requests
         const results = await Promise.all(
           deletedTerms.map(id =>
             fetch(`http://${import.meta.env.VITE_API}/term/${id}`, {
@@ -70,9 +69,9 @@ export const modulesApi = createApi({
 
         return results
       },
-      // cache updates manually (update even error)
+      // cache updates manually
       async onQueryStarted({ moduleId, deletedTerms }, { dispatch }) {
-        /*const deleteTermUpdates = */ dispatch(
+        dispatch(
           modulesApi.util.updateQueryData("getModuleById", moduleId, mod => {
             mod.terms = mod.terms.filter(
               term => !deletedTerms.includes(term.id),
@@ -80,7 +79,7 @@ export const modulesApi = createApi({
           }),
         )
       },
-      // this don't worked with queryFn
+      // Re-fetch all module is no needed
       // invalidatesTags: ['Module'],
     }),
     editTerm: builder.mutation({
@@ -128,7 +127,7 @@ export const modulesApi = createApi({
           update.undo()
         }
       },
-      invalidatesTags: ["Module"], // not worked without this, I don't not why
+      invalidatesTags: ["Module"],
     }),
     addNewTerms: builder.mutation({
       async queryFn({ moduleId, text, separator }) {
@@ -139,6 +138,21 @@ export const modulesApi = createApi({
             fetch(`http://${import.meta.env.VITE_API}/term/`, {
               method: "post",
               body: JSON.stringify({ ...term, module: moduleId }),
+              headers: { "Content-Type": "application/json" },
+            }),
+          ),
+        )
+        return results
+      },
+      invalidatesTags: ["Module"],
+    }),
+    moveTerms: builder.mutation({
+      async queryFn({ terms, destination }) {
+        const results = await Promise.all(
+          terms.map(id =>
+            fetch(`http://${import.meta.env.VITE_API}/term/${id}`, {
+              method: "put",
+              body: JSON.stringify({ module: destination }),
               headers: { "Content-Type": "application/json" },
             }),
           ),
@@ -159,4 +173,5 @@ export const {
   useDeleteTermsMutation,
   useEditTermMutation,
   useAddNewTermsMutation,
+  useMoveTermsMutation,
 } = modulesApi
