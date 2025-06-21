@@ -19,14 +19,14 @@ export default function Home() {
         <Typography sx={{ textAlign: "center" }} variant="h5">
           Все модули
         </Typography>
-        <ListModules />
+        <ListModules action={id => navigate(`/module/${id}`)} />
         <CreateButton action={() => navigate("/create")} />
       </Box>
     </>
   )
 }
 
-function ListModules() {
+function ListModules({ action }) {
   const { data, error, isLoading } = useGetAllModulesQuery()
 
   if (error)
@@ -58,7 +58,11 @@ function ListModules() {
         <Table sx={{ border: "none" }} aria-label="collapsible table">
           <TableBody>
             {data.map(mod => (
-              <ModuleName key={mod.id} mod={mod} />
+              <ModuleName
+                key={mod.id}
+                name={mod.name}
+                onClick={() => action(mod.id)}
+              />
             ))}
           </TableBody>
         </Table>
@@ -66,15 +70,12 @@ function ListModules() {
     )
   }
 }
-function ModuleName(props) {
-  const navigate = useNavigate()
+
+function ModuleName({ onClick, name }) {
   return (
     <>
-      <TableRow
-        onClick={() => navigate(`/module/${props.mod.id}`)}
-        sx={{ "& > *": { border: 0 } }}
-      >
-        <TableCell>{props.mod.name}</TableCell>
+      <TableRow onClick={onClick} sx={{ "& > *": { border: 0 } }}>
+        <TableCell>{name}</TableCell>
       </TableRow>
     </>
   )
