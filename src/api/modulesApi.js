@@ -69,7 +69,8 @@ export const modulesApi = createApi({
 
         return results
       },
-      // cache updates manually
+      // Cache updates manually, because
+      // re-fetch all module is no needed if one term has been deleted
       async onQueryStarted({ moduleId, deletedTerms }, { dispatch }) {
         dispatch(
           modulesApi.util.updateQueryData("getModuleById", moduleId, mod => {
@@ -79,8 +80,6 @@ export const modulesApi = createApi({
           }),
         )
       },
-      // Re-fetch all module is no needed
-      // invalidatesTags: ['Module'],
     }),
     editTerm: builder.mutation({
       async queryFn(arg) {
@@ -135,6 +134,8 @@ export const modulesApi = createApi({
         )
         return results
       },
+      // I use auto re-fetch here, because
+      // I have to know term.id, thats returns by server, before adding term to terms list
       invalidatesTags: ["Module"],
     }),
     moveTerms: builder.mutation({
@@ -150,6 +151,8 @@ export const modulesApi = createApi({
         )
         return results
       },
+      // I use auto re-fetch here, because
+      // destination module may not downloaded yet (and cache may haven't it yet)
       invalidatesTags: ["Module"],
     }),
   }),
