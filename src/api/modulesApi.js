@@ -102,32 +102,23 @@ export const modulesApi = createApi({
 
         return result
       },
-      async onQueryStarted(term, { dispatch, queryFulfilled }) {
-        const update = dispatch(
+      async onQueryStarted(term, { dispatch }) {
+        dispatch(
           modulesApi.util.updateQueryData(
             "getModuleById",
             term.module.toString(),
             mod => {
-              const termIndex = mod.terms.findIndex(t => t.id === term.id)
-              return {
-                ...mod,
-                terms: [
-                  ...mod.terms.slice(0, termIndex),
-                  { ...mod.terms[termIndex], ...term },
-                  ...mod.terms.slice(termIndex + 1),
-                ],
+              const editedTermIndex = mod.terms.findIndex(t => t.id === term.id)
+              const newTerms = [...mod.terms]
+              newTerms[editedTermIndex] = {
+                ...newTerms[editedTermIndex],
+                ...term,
               }
+              mod.terms = [...newTerms]
             },
           ),
         )
-
-        try {
-          await queryFulfilled()
-        } catch {
-          update.undo()
-        }
       },
-      invalidatesTags: ["Module"],
     }),
     addNewTerms: builder.mutation({
       async queryFn({ moduleId, text, separator }) {
