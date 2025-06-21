@@ -21,9 +21,15 @@ import AppBar from "@mui/material/AppBar"
 import Toolbar from "@mui/material/Toolbar"
 import ClearIcon from "@mui/icons-material/Clear"
 import DoneIcon from "@mui/icons-material/Done"
+import Dialog from "@mui/material/Dialog"
+import DialogTitle from "@mui/material/DialogTitle"
+import DialogActions from "@mui/material/DialogActions"
+import DialogContent from "@mui/material/DialogContent"
+import DialogContentText from "@mui/material/DialogContentText"
 
 import SaveButtonsGroup from "../widjets/SaveButtonsGroup"
 import DeleteConfirmDialog from "../widjets/DeleteConfirmDialog"
+import ListModules from "../widjets/ListModules"
 
 export default function EditModule() {
   const { id } = useParams()
@@ -286,10 +292,19 @@ function BottomMenu({ selected, removeAllSelected }) {
   const [deleteTerms] = useDeleteTermsMutation()
   const { id } = useParams()
   const [openDeleteConfirmDialog, setOpenDeleteConfirmDialog] = useState(false)
+  const [openMoveConfirmDialog, setOpenMoveConfirmDialog] = useState(false)
 
   function handleClickDelete() {
     deleteTerms({ moduleId: id, deletedTerms: selected })
     setOpenDeleteConfirmDialog(false)
+    removeAllSelected()
+  }
+
+  function handleClickMove(id) {
+    console.log(
+      `This terms: ${selected.join(", ")}\nwill be moved to module: ${id}`,
+    )
+    setOpenMoveConfirmDialog(false)
     removeAllSelected()
   }
 
@@ -305,6 +320,9 @@ function BottomMenu({ selected, removeAllSelected }) {
             >
               Выбрано: {selected.length}
             </Typography>
+            <Button onClick={() => setOpenMoveConfirmDialog(true)}>
+              Переместить
+            </Button>
             <Button onClick={() => setOpenDeleteConfirmDialog(true)}>
               Удалить
             </Button>
@@ -319,6 +337,31 @@ function BottomMenu({ selected, removeAllSelected }) {
           submit={handleClickDelete}
           cancel={() => setOpenDeleteConfirmDialog(false)}
         />
+        <MoveConfirmDialog
+          open={openMoveConfirmDialog}
+          text={`Кликните на название модуля из списка ниже, чтобы переместить в него выбранные термины (${selected.length})`}
+          submit={handleClickMove}
+          cancel={() => setOpenMoveConfirmDialog(false)}
+        />
       </>
     )
+}
+
+function MoveConfirmDialog({ open, text, submit, cancel }) {
+  return (
+    <>
+      <Dialog open={open}>
+        <DialogTitle>Переместить термины</DialogTitle>
+        <DialogContent>
+          <DialogContentText>{text}</DialogContentText>
+          <ListModules action={id => submit(id)} />
+          <DialogActions>
+            <Button onClick={cancel} variant="contained">
+              Отмена
+            </Button>
+          </DialogActions>
+        </DialogContent>
+      </Dialog>
+    </>
+  )
 }
