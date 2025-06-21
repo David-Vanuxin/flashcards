@@ -108,12 +108,10 @@ export const modulesApi = createApi({
             term.module.toString(),
             mod => {
               const editedTermIndex = mod.terms.findIndex(t => t.id === term.id)
-              const newTerms = [...mod.terms]
-              newTerms[editedTermIndex] = {
-                ...newTerms[editedTermIndex],
+              mod.terms[editedTermIndex] = {
+                ...mod.terms[editedTermIndex],
                 ...term,
               }
-              mod.terms = [...newTerms]
             },
           ),
         )
