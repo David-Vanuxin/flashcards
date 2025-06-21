@@ -149,9 +149,28 @@ export const modulesApi = createApi({
         )
         return results
       },
-      // I use auto re-fetch here, because
-      // destination module may not downloaded yet (and cache may haven't it yet)
-      invalidatesTags: ["Module"],
+      async onQueryStarted({ terms, destination, source }, { dispatch }) {
+        dispatch(
+          modulesApi.util.updateQueryData(
+            "getModuleById",
+            source.toString(),
+            mod => {
+              const moved = mod.terms.filter(term => terms.includes(term.id))
+              mod.terms = mod.terms.filter(term => !terms.includes(term.id))
+
+              dispatch(
+                modulesApi.util.updateQueryData(
+                  "getModuleById",
+                  destination.toString(),
+                  mod => {
+                    mod.terms = [...mod.terms, ...moved]
+                  },
+                ),
+              )
+            },
+          ),
+        )
+      },
     }),
   }),
 })

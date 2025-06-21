@@ -302,8 +302,8 @@ function BottomMenu({ selected, removeAllSelected }) {
     removeAllSelected()
   }
 
-  function handleClickMove(id) {
-    moveTerms({ terms: selected, destination: id })
+  function handleClickMove(destinationId) {
+    moveTerms({ terms: selected, destination: destinationId, source: id })
     setOpenMoveConfirmDialog(false)
     removeAllSelected()
   }
