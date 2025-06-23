@@ -3,7 +3,7 @@ interface Term {
   question: string
 }
 
-export function parse(separator, text: string): Term[] {
+export function parse(separator: string, text: string): Term[] {
   return text.split("\n").map(str => {
     const pair = str.split(separator)
     return { answer: pair[0], question: pair[1] }
