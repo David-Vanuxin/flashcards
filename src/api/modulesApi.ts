@@ -5,9 +5,9 @@ export const modulesApi = createApi({
   reducerPath: "modulesApi",
   baseQuery: fetchBaseQuery({
     baseUrl: `http://${import.meta.env.VITE_API}/module/`,
+    isJsonContentType: () => true,
   }),
   tagTypes: ["Module"],
-  isJsonContentType: () => true,
   endpoints: builder => ({
     getAllModules: builder.query({
       query: () => "",
