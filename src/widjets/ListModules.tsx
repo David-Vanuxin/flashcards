@@ -6,8 +6,17 @@ import Typography from "@mui/material/Typography"
 
 import { useGetAllModulesQuery } from "../api/modulesApi"
 
-export default function ListModules({ action }) {
-  const { data, error, isLoading } = useGetAllModulesQuery()
+interface Module {
+  name: string
+  id: number
+}
+
+export default function ListModules({
+  action,
+}: {
+  action: (id: string) => void
+}) {
+  const { data, error, isLoading } = useGetAllModulesQuery("")
 
   if (error)
     return (
@@ -37,11 +46,11 @@ export default function ListModules({ action }) {
       <>
         <Table sx={{ border: "none" }} aria-label="collapsible table">
           <TableBody>
-            {data.map(mod => (
+            {data.map((mod: Module) => (
               <ModuleName
                 key={mod.id}
                 name={mod.name}
-                onClick={() => action(mod.id)}
+                onClick={() => action(mod.id.toString())}
               />
             ))}
           </TableBody>
@@ -51,7 +60,7 @@ export default function ListModules({ action }) {
   }
 }
 
-function ModuleName({ onClick, name }) {
+function ModuleName({ onClick, name }: { onClick: () => void; name: string }) {
   return (
     <>
       <TableRow onClick={onClick} sx={{ "& > *": { border: 0 } }}>
