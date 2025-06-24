@@ -61,7 +61,7 @@ interface NewTermsAdditionParams {
 }
 
 interface MoveTermsParams {
-  terms: Term[]
+  terms: number[]
   destination: number | string
   source: number | string
 }
@@ -222,8 +222,8 @@ export const modulesApi = createApi({
             "getModuleById",
             source.toString(),
             (mod: TransformedModule) => {
-              const moved = mod.terms.filter(term => terms.includes(term))
-              mod.terms = mod.terms.filter(term => !terms.includes(term))
+              const moved = mod.terms.filter(term => terms.includes(term.id))
+              mod.terms = mod.terms.filter(term => !terms.includes(term.id))
 
               dispatch(
                 modulesApi.util.updateQueryData(
