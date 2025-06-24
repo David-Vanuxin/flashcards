@@ -1,3 +1,5 @@
+import { ModuleCreationParams } from "./types.js"
+
 interface Term {
   answer: string
   question: string
@@ -15,11 +17,11 @@ interface Module {
   terms: Term[]
 }
 
-export function getModule(
-  name: string,
-  separator: string,
-  text: string,
-): Module {
+export function getModule({
+  name,
+  separator,
+  text,
+}: ModuleCreationParams): Module {
   return {
     name,
     terms: parse(separator, text),

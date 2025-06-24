@@ -6,5 +6,7 @@ export default configureStore({
     [modulesApi.reducerPath]: modulesApi.reducer,
   },
   middleware: getDefaultMiddleware =>
-    getDefaultMiddleware().concat(modulesApi.middleware),
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }).concat(modulesApi.middleware),
 })

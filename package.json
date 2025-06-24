@@ -6,7 +6,7 @@
     "types": "tsc",
     "types:watch": "tsc --watch",
     "build": "vite build",
-    "lint": "eslint src --ignore-pattern src/api/*.js",
+    "lint": "eslint src --ignore-pattern 'src/api/*.js'",
     "check": "npm run format && npm run lint && npm run types",
     "test": "node --test",
     "format": "prettier src --write"
