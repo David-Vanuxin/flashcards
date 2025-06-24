@@ -1,7 +1,12 @@
 import Box from "@mui/material/Box"
 import Button from "@mui/material/Button"
 
-export default function SaveButtonsGroup({ save, cancel }) {
+interface Props {
+  save: () => void
+  cancel: () => void
+}
+
+export default function SaveButtonsGroup({ save, cancel }: Props) {
   return (
     <>
       <Box sx={{ display: "flex", justifyContent: "end", gap: 1 }}>
