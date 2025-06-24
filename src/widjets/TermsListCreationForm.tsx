@@ -1,6 +1,13 @@
 import TextField from "@mui/material/TextField"
+import { SxProps } from "@mui/material"
+import React from "react"
 
-export default function TermsListCreationForm({ setText, sx }) {
+interface Props {
+  setText: React.Dispatch<React.SetStateAction<null | string>>
+  sx: SxProps
+}
+
+export default function TermsListCreationForm({ setText, sx }: Props) {
   return (
     <>
       <TextField
