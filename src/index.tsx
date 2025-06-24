@@ -22,7 +22,7 @@ const darkTheme = createTheme({
   },
 })
 
-const root = createRoot(document.getElementById("app"))
+const root = createRoot(document.getElementById("app")!)
 root.render(
   <React.StrictMode>
     <ThemeProvider theme={darkTheme}>

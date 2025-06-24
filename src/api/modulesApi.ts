@@ -156,14 +156,11 @@ export const modulesApi = createApi({
       async queryFn(term, _api, _extraOptions, baseQuery) {
         if (!term.id) throw new Error("term.id is required")
 
-        await fetch(
-          `http://${import.meta.env.VITE_API}/term/${term.id}`,
-          {
-            method: "put",
-            body: JSON.stringify(term),
-            headers: { "Content-Type": "application/json" },
-          },
-        )
+        await fetch(`http://${import.meta.env.VITE_API}/term/${term.id}`, {
+          method: "put",
+          body: JSON.stringify(term),
+          headers: { "Content-Type": "application/json" },
+        })
         return { data: undefined }
       },
       async onQueryStarted(term, { dispatch }) {

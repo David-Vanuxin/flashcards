@@ -15,7 +15,7 @@ export default function Home() {
         <Typography sx={{ textAlign: "center" }} variant="h5">
           Все модули
         </Typography>
-        <ListModules action={id => navigate(`/module/${id}`)} />
+        <ListModules action={(id: string) => navigate(`/module/${id}`)} />
         <CreateButton action={() => navigate("/create")} />
       </Box>
     </>
