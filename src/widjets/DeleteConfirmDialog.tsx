@@ -5,7 +5,19 @@ import DialogContent from "@mui/material/DialogContent"
 import DialogContentText from "@mui/material/DialogContentText"
 import Button from "@mui/material/Button"
 
-export default function DeleteConfirmDialog({ open, text, submit, cancel }) {
+interface Props {
+  open: boolean
+  text: string
+  submit: () => void
+  cancel: () => void
+}
+
+export default function DeleteConfirmDialog({
+  open,
+  text,
+  submit,
+  cancel,
+}: Props) {
   return (
     <>
       <Dialog open={open}>
