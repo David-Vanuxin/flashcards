@@ -1,4 +1,4 @@
-import { useParams } from "react-router"
+import { useParams } from "react-router" // import {useIdParam} from "../hooks"
 import { useState, useEffect } from "react"
 import {
   useGetModuleByIdQuery,
@@ -33,7 +33,7 @@ import DeleteConfirmDialog from "../widjets/DeleteConfirmDialog"
 import ListModules from "../widjets/ListModules"
 
 export default function EditModule() {
-  const { id } = useParams()
+  const { id } = useParams() // const id = useIdParam()
   const { data, isLoading } = useGetModuleByIdQuery(id)
   const [showSaveButtonsGroup, setShowSaveButtonsGroup] = useState(false)
   const [renameModule] = useRenameModuleMutation()
@@ -212,7 +212,7 @@ function Term({ term: { id, answer, question }, selected, setSelected }) {
 function EditionGroup({ defaultValue, label, type, termId }) {
   const [buttonsVisibility, setButtonsVisibility] = useState(false)
   const [textValue, setTextValue] = useState(defaultValue)
-  const { id } = useParams()
+  const { id } = useParams() // const id = useIdParam()
   const [editTerm, result] = useEditTermMutation()
 
   useEffect(() => {
@@ -292,7 +292,7 @@ function EditionConfirmButtonsGroup({ show, confirm, cancel }) {
 function BottomMenu({ selected, removeAllSelected }) {
   const [deleteTerms] = useDeleteTermsMutation()
   const [moveTerms] = useMoveTermsMutation()
-  const { id } = useParams()
+  const { id } = useParams() // const id = useIdParam()
   const [openDeleteConfirmDialog, setOpenDeleteConfirmDialog] = useState(false)
   const [openMoveConfirmDialog, setOpenMoveConfirmDialog] = useState(false)
 

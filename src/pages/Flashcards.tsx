@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react"
-import { useParams } from "react-router"
-import { useGetModuleByIdQuery } from "../api/modulesApi"
+import React, { useEffect, useState } from "react"
+import { useIdParam } from "../hooks"
+import { useGetModuleByIdQuery, TransformedTerm } from "../api/modulesApi"
 import Typography from "@mui/material/Typography"
 import Box from "@mui/material/Box"
 import IconButton from "@mui/material/IconButton"
@@ -12,22 +12,24 @@ import "./flashcards.css"
 import Paper from "@mui/material/Paper"
 import { styled } from "@mui/material/styles"
 
+type Status = "question" | "answer"
+
 export default function Flashcards() {
-  const { id } = useParams()
+  const id = useIdParam()
   const { data, error, isLoading } = useGetModuleByIdQuery(id)
 
-  const [terms, setTerms] = useState([])
+  const [terms, setTerms] = useState<TransformedTerm[]>([])
   const [number, setNumber] = useState(0)
-  const [status, setStatus] = useState("question")
+  const [status, setStatus] = useState<Status>("question")
 
   const [lastAction, setLastAction] = useState("inc")
 
   useEffect(() => {
-    if (!isLoading) setTerms(data.terms)
+    if (!isLoading && data) setTerms(data.terms)
   }, [isLoading])
 
   useEffect(() => {
-    const key = event => {
+    const key = (event: KeyboardEvent) => {
       if (event.key == "ArrowLeft") {
         prev()
       } else if (event.key == "ArrowRight") {
@@ -71,7 +73,7 @@ export default function Flashcards() {
     setStatus("question")
   }
 
-  function deleteCard(cardNumber) {
+  function deleteCard(cardNumber: number) {
     // Important! count + 1, not count++
     // arrow funtction returns variable "count",
     // thats increment in this case useless
@@ -113,7 +115,7 @@ export default function Flashcards() {
       </>
     )
 
-  if (data.length !== 0)
+  if (data)
     return (
       <>
         <Typography sx={{ textAlign: "center" }} variant="h5">
@@ -129,7 +131,7 @@ export default function Flashcards() {
           }}
         >
           <Card
-            sx={{ mt: 4 }}
+            // sx={{ mt: 4 }}
             number={number}
             terms={terms}
             status={status}
@@ -161,9 +163,14 @@ const CardPaper = styled(Paper)`
   user-select: none;
 `
 
-function Card(props) {
-  const { number, terms, status, setStatus } = props
+interface CardsProps {
+  number: number
+  terms: TransformedTerm[]
+  status: Status
+  setStatus: React.Dispatch<React.SetStateAction<Status>>
+}
 
+function Card({ number, terms, status, setStatus }: CardsProps) {
   const [cardWrapper, setCardWrapper] = useState("flip-card")
   const [cardInner, setCardInner] = useState("flip-card-inner")
 

@@ -130,7 +130,6 @@ interface AddTermsProps {
 }
 
 function AddTermsDialog({ setOpenDialog, openDialog }: AddTermsProps) {
-  // const { id } = useParams<keyof Param>() as Param
   const id = useIdParam()
   const [text, setText] = useState("")
   const [separator, setSeparator] = useState("")

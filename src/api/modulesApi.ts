@@ -10,14 +10,16 @@ interface ModuleResponse {
   }
 }
 
-interface TransformedModule {
+export interface TransformedModule {
   id: number
   name: string
-  terms: (Term & {
-    next: number
-    prev: number
-    hidden: boolean
-  })[]
+  terms: TransformedTerm[]
+}
+
+export interface TransformedTerm extends Term {
+  next: number
+  prev: number
+  hidden: boolean
 }
 
 export interface Term {
