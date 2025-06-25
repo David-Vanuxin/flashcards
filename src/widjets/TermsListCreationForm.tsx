@@ -4,7 +4,7 @@ import React from "react"
 
 interface Props {
   setText: React.Dispatch<React.SetStateAction<string>>
-  sx: SxProps
+  sx?: SxProps
 }
 
 export default function TermsListCreationForm({ setText, sx }: Props) {

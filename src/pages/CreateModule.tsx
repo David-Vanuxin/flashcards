@@ -65,16 +65,10 @@ export default function CreateModule() {
           </Typography>
           <List>
             <ListItem>
-              <ListItemText
-                primary="Каждая пара начинается с новой строки"
-                variant="body2"
-              />
+              <ListItemText primary="Каждая пара начинается с новой строки" />
             </ListItem>
             <ListItem>
-              <ListItemText
-                primary="На каждой строке есть разделитель"
-                variant="body2"
-              />
+              <ListItemText primary="На каждой строке есть разделитель" />
             </ListItem>
           </List>
         </AccordionDetails>
