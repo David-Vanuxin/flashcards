@@ -43,7 +43,7 @@ interface ApiDeleteResponse extends ApiResponse {
 }
 
 interface RenameModuleParams {
-  id: number
+  id: string
   name: string
 }
 
@@ -51,7 +51,7 @@ interface ApiRenameResponse extends ApiResponse, RenameModuleParams {}
 
 interface EditTermArgs {
   id: number
-  module: number
+  module: string
   answer?: string
   question?: string
 }

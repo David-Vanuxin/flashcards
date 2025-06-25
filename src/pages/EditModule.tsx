@@ -1,11 +1,12 @@
-import { useParams } from "react-router" // import {useIdParam} from "../hooks"
-import { useState, useEffect } from "react"
+import { useIdParam } from "../hooks"
+import React, { useState, useEffect } from "react"
 import {
   useGetModuleByIdQuery,
   useRenameModuleMutation,
   useDeleteTermsMutation,
   useEditTermMutation,
   useMoveTermsMutation,
+  TransformedTerm,
 } from "../api/modulesApi"
 
 import Typography from "@mui/material/Typography"
@@ -33,18 +34,21 @@ import DeleteConfirmDialog from "../widjets/DeleteConfirmDialog"
 import ListModules from "../widjets/ListModules"
 
 export default function EditModule() {
-  const { id } = useParams() // const id = useIdParam()
+  const id = useIdParam()
   const { data, isLoading } = useGetModuleByIdQuery(id)
   const [showSaveButtonsGroup, setShowSaveButtonsGroup] = useState(false)
   const [renameModule] = useRenameModuleMutation()
   const [newModuleName, setNewModuleName] = useState("Загрузка...")
 
   useEffect(() => {
-    if (!isLoading) setNewModuleName(data.name)
+    if (!isLoading && data) setNewModuleName(data.name)
   }, [isLoading])
 
-  function changeHandler(event) {
-    if (event.target.value !== data.name) {
+  // These two handlers below uses no-null assertion
+  // because they are drilled to props of components
+  // thats rendered only if data isn't undefined
+  function changeHandler(event: React.ChangeEvent<HTMLInputElement>) {
+    if (event.target.value !== data!.name) {
       setShowSaveButtonsGroup(true)
       setNewModuleName(event.target.value)
     } else {
@@ -53,16 +57,16 @@ export default function EditModule() {
     }
   }
 
+  function cancel() {
+    setNewModuleName(data!.name)
+    setShowSaveButtonsGroup(false)
+  }
+
   function saveNewName() {
     if (newModuleName) {
       renameModule({ id, name: newModuleName })
       setShowSaveButtonsGroup(false)
     }
-  }
-
-  function cancel() {
-    setNewModuleName(data.name)
-    setShowSaveButtonsGroup(false)
   }
 
   if (data) {
@@ -88,8 +92,8 @@ export default function EditModule() {
   }
 }
 
-function TermsList({ terms }) {
-  const [selected, setSelected] = useState([])
+function TermsList({ terms }: { terms: TransformedTerm[] }) {
+  const [selected, setSelected] = useState<number[]>([])
   const [generalCheckboxChecked, setGeneralCheckboxChecked] = useState(false)
 
   function selectAll() {
@@ -148,7 +152,17 @@ function TermsList({ terms }) {
   )
 }
 
-function Term({ term: { id, answer, question }, selected, setSelected }) {
+interface TermProps {
+  term: TransformedTerm
+  selected: number[]
+  setSelected: React.Dispatch<React.SetStateAction<number[]>>
+}
+
+function Term({
+  term: { id, answer, question },
+  selected,
+  setSelected,
+}: TermProps) {
   const [checked, setChecked] = useState(false)
 
   useEffect(() => {
@@ -171,8 +185,8 @@ function Term({ term: { id, answer, question }, selected, setSelected }) {
 
   function handleCheckboxChange() {
     setChecked(checked => {
-      if (!checked) addSelected(id)
-      else removeSelection(id)
+      if (!checked) addSelected()
+      else removeSelection()
 
       return !checked
     })
@@ -209,10 +223,22 @@ function Term({ term: { id, answer, question }, selected, setSelected }) {
   )
 }
 
-function EditionGroup({ defaultValue, label, type, termId }) {
+interface EditionGroupProps {
+  defaultValue: string
+  label: string
+  type: "answer" | "question"
+  termId: number
+}
+
+function EditionGroup({
+  defaultValue,
+  label,
+  type,
+  termId,
+}: EditionGroupProps) {
   const [buttonsVisibility, setButtonsVisibility] = useState(false)
   const [textValue, setTextValue] = useState(defaultValue)
-  const { id } = useParams() // const id = useIdParam()
+  const id = useIdParam()
   const [editTerm, result] = useEditTermMutation()
 
   useEffect(() => {
@@ -228,9 +254,11 @@ function EditionGroup({ defaultValue, label, type, termId }) {
     setButtonsVisibility(false)
   }
 
-  function changeHandler(event) {
-    setTextValue(event.target.value)
-    if (event.target.value !== defaultValue && event.target.value !== "") {
+  function changeHandler(event: React.ChangeEvent) {
+    const newValue = (event.currentTarget as HTMLInputElement).value
+    setTextValue(newValue)
+
+    if (newValue !== defaultValue && newValue !== "") {
       setButtonsVisibility(true)
     } else setButtonsVisibility(false)
   }
@@ -261,7 +289,15 @@ function EditionGroup({ defaultValue, label, type, termId }) {
   )
 }
 
-function EditionConfirmButtonsGroup({ show, confirm, cancel }) {
+function EditionConfirmButtonsGroup({
+  show,
+  confirm,
+  cancel,
+}: {
+  show: boolean
+  confirm: () => void
+  cancel: () => void
+}) {
   if (show)
     return (
       <>
@@ -289,10 +325,16 @@ function EditionConfirmButtonsGroup({ show, confirm, cancel }) {
     )
 }
 
-function BottomMenu({ selected, removeAllSelected }) {
+function BottomMenu({
+  selected,
+  removeAllSelected,
+}: {
+  selected: number[]
+  removeAllSelected: () => void
+}) {
   const [deleteTerms] = useDeleteTermsMutation()
   const [moveTerms] = useMoveTermsMutation()
-  const { id } = useParams() // const id = useIdParam()
+  const id = useIdParam()
   const [openDeleteConfirmDialog, setOpenDeleteConfirmDialog] = useState(false)
   const [openMoveConfirmDialog, setOpenMoveConfirmDialog] = useState(false)
 
@@ -302,7 +344,7 @@ function BottomMenu({ selected, removeAllSelected }) {
     removeAllSelected()
   }
 
-  function handleClickMove(destinationId) {
+  function handleClickMove(destinationId: string) {
     moveTerms({ terms: selected, destination: destinationId, source: id })
     setOpenMoveConfirmDialog(false)
     removeAllSelected()
@@ -347,14 +389,26 @@ function BottomMenu({ selected, removeAllSelected }) {
     )
 }
 
-function MoveConfirmDialog({ open, text, submit, cancel }) {
+interface MoveConfirmDialogProps {
+  open: boolean
+  text: string
+  submit: (id: string) => void
+  cancel: () => void
+}
+
+function MoveConfirmDialog({
+  open,
+  text,
+  submit,
+  cancel,
+}: MoveConfirmDialogProps) {
   return (
     <>
       <Dialog open={open}>
         <DialogTitle>Переместить термины</DialogTitle>
         <DialogContent>
           <DialogContentText>{text}</DialogContentText>
-          <ListModules action={id => submit(id)} />
+          <ListModules action={submit} />
           <DialogActions>
             <Button onClick={cancel} variant="contained">
               Отмена
