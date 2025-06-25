@@ -140,7 +140,7 @@ function AddTermsDialog({ setOpenDialog, openDialog }: AddTermsProps) {
     <>
       <Dialog open={openDialog}>
         <DialogTitle sx={{ pb: 0 }}>Добавить термины</DialogTitle>
-        <DialogContent sx={{ width: "80vw" }}>
+        <DialogContent>
           <TextField
             sx={{ mt: 1 }}
             onChange={event => setSeparator(event.target.value)}
@@ -149,7 +149,7 @@ function AddTermsDialog({ setOpenDialog, openDialog }: AddTermsProps) {
             placeholder="Например: _"
           />
           <TermsListCreationForm sx={{ mt: 1 }} setText={setText} />
-          <DialogActions>
+          <DialogActions sx={{ p: 0 }}>
             <SaveButtonsGroup
               save={() => {
                 addNewTerms({ moduleId: id, text, separator })
