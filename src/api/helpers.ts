@@ -1,8 +1,12 @@
-import { ModuleCreationParams } from "./types.js"
-
 interface Term {
   answer: string
   question: string
+}
+
+export interface ModuleCreationParams {
+  name: string
+  separator: string
+  text: string
 }
 
 export function parse(separator: string, text: string): Term[] {

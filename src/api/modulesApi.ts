@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
-import { getModule } from "./helpers.js"
-import { ModuleCreationParams } from "./types.js"
+import { getModule, ModuleCreationParams } from "./helpers.js"
 
 interface ModuleResponse {
   data: {
