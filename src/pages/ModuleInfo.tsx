@@ -1,9 +1,12 @@
-import { Link, useParams, useNavigate } from "react-router"
+import React from "react"
+import { Link, useNavigate } from "react-router"
+import { useIdParam } from "../hooks"
 import { useState } from "react"
 import {
   useGetModuleByIdQuery,
   useDeleteModuleMutation,
   useAddNewTermsMutation,
+  Term as ITerm,
 } from "../api/modulesApi"
 
 import Box from "@mui/material/Box"
@@ -28,7 +31,7 @@ import SaveButtonsGroup from "../widjets/SaveButtonsGroup"
 import DeleteConfirmDialog from "../widjets/DeleteConfirmDialog"
 
 export default function ModuleInfo() {
-  const { id } = useParams()
+  const id = useIdParam()
   const { data, error, isLoading } = useGetModuleByIdQuery(id)
   const [openDeleteConfirmDialog, setOpenDeleteConfirmDialog] = useState(false)
   const navigate = useNavigate()
@@ -100,7 +103,7 @@ export default function ModuleInfo() {
   }
 }
 
-function TermsList({ terms }) {
+function TermsList({ terms }: { terms: ITerm[] }) {
   if (terms.length === 0)
     return (
       <>
@@ -121,8 +124,14 @@ function TermsList({ terms }) {
     )
 }
 
-function AddTermsDialog({ setOpenDialog, openDialog }) {
-  const { id } = useParams()
+interface AddTermsProps {
+  setOpenDialog: React.Dispatch<React.SetStateAction<boolean>>
+  openDialog: boolean
+}
+
+function AddTermsDialog({ setOpenDialog, openDialog }: AddTermsProps) {
+  // const { id } = useParams<keyof Param>() as Param
+  const id = useIdParam()
   const [text, setText] = useState("")
   const [separator, setSeparator] = useState("")
 
@@ -156,7 +165,7 @@ function AddTermsDialog({ setOpenDialog, openDialog }) {
   )
 }
 
-function Term(props) {
+function Term(props: { term: ITerm }) {
   return (
     <>
       <TableRow sx={{ "& > *": { border: 0 } }}>

@@ -20,7 +20,7 @@ interface TransformedModule {
   })[]
 }
 
-interface Term {
+export interface Term {
   id: number
   answer: string
   question: string
@@ -55,7 +55,7 @@ interface EditTermArgs {
 }
 
 interface NewTermsAdditionParams {
-  moduleId: number
+  moduleId: string
   text: string
   separator: string
 }

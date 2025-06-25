@@ -3,7 +3,7 @@ import { SxProps } from "@mui/material"
 import React from "react"
 
 interface Props {
-  setText: React.Dispatch<React.SetStateAction<null | string>>
+  setText: React.Dispatch<React.SetStateAction<string>>
   sx: SxProps
 }
 
