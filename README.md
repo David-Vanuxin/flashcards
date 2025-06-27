@@ -1,7 +1,5 @@
 # Flashcards
 
-**Попробуйте:** [simple-flashcards.vercel.app](https://simple-flashcards.vercel.app/)
-
 ## Описание
 Приложение для заучивания значений слов (терминов)<br/>
 Улучшенная версия более известного приложения Quizlet
