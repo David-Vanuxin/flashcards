@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { useIdParam } from "../hooks"
-import { useGetModuleByIdQuery, TransformedTerm } from "../api/modulesApi"
+import { useGetModuleByIdQuery, Term } from "../api/modulesApi"
 import Typography from "@mui/material/Typography"
 import Box from "@mui/material/Box"
 import IconButton from "@mui/material/IconButton"
@@ -18,11 +18,11 @@ export default function Flashcards() {
   const id = useIdParam()
   const { data, error, isLoading } = useGetModuleByIdQuery(id)
 
-  const [terms, setTerms] = useState<TransformedTerm[]>([])
+  const [terms, setTerms] = useState<Term[]>([])
   const [number, setNumber] = useState(0)
   const [status, setStatus] = useState<Status>("question")
 
-  const [lastAction, setLastAction] = useState("inc")
+  const [lastAction, setLastAction] = useState<"inc" | "dec">("inc")
 
   useEffect(() => {
     if (!isLoading && data) setTerms(data.terms)
@@ -35,7 +35,7 @@ export default function Flashcards() {
       } else if (event.key == "ArrowRight") {
         next()
       } else if (event.keyCode == 13 || event.keyCode == 32) {
-        deleteCard(number)
+        deleteCard()
       } else if (event.key == "ArrowUp") {
         setStatus("answer")
       } else if (event.key == "ArrowDown") {
@@ -50,48 +50,36 @@ export default function Flashcards() {
     }
   }, [number, terms])
 
-  // This algorithm provide hign load to CPU
-  // For see it just do this:
-  // 1) Open task manager
-  // 2) Hide many cards
-  // 3) Click to arrows
   function next() {
-    let nextTermIndex = terms[number].next
-    while (terms[nextTermIndex].hidden)
-      nextTermIndex = terms[nextTermIndex].next
-    setNumber(nextTermIndex)
-    setLastAction("inc")
+    setNumber(n => (n === terms.length - 1 ? 0 : n + 1))
     setStatus("question")
+    setLastAction("inc")
   }
 
   function prev() {
-    let nextTermIndex = terms[number].prev
-    while (terms[nextTermIndex].hidden)
-      nextTermIndex = terms[nextTermIndex].prev
-    setNumber(nextTermIndex)
-    setLastAction("dec")
+    setNumber(n => (n === 0 ? terms.length - 1 : n - 1))
+
     setStatus("question")
+    setLastAction("dec")
   }
 
-  function deleteCard(cardNumber: number) {
-    // Important! count + 1, not count++
-    // arrow funtction returns variable "count",
-    // thats increment in this case useless
-    if (
-      terms.reduce((count, term) => (!term.hidden ? count + 1 : count), 0) === 1
-    )
-      return
+  function deleteCard() {
+    if (terms.length === 1) return
 
-    const newTerms = terms.map(t => Object.assign({}, t))
-    newTerms[cardNumber].hidden = true
+    setTerms(terms => {
+      const updated = [...terms]
+      updated.splice(number, 1)
 
-    setTerms(newTerms)
+      if (lastAction === "inc") setNumber(n => (n === updated.length ? 0 : n))
 
-    if (lastAction == "inc") {
-      next()
-    } else if (lastAction == "dec") {
-      prev()
-    }
+      setStatus("question")
+      return updated
+    })
+
+    if (lastAction !== "inc")
+      // terms.length - 2 because terms being shorter after re-render
+      // and terms.length - 1 became out of range
+      setNumber(n => (n === 0 ? terms.length - 2 : n - 1))
   }
 
   if (error)
@@ -115,7 +103,7 @@ export default function Flashcards() {
       </>
     )
 
-  if (data)
+  if (data && terms.length)
     return (
       <>
         <Typography sx={{ textAlign: "center" }} variant="h5">
@@ -131,14 +119,13 @@ export default function Flashcards() {
           }}
         >
           <Card
-            // sx={{ mt: 4 }}
             number={number}
             terms={terms}
             status={status}
             setStatus={setStatus}
           />
           <Box sx={{ mt: 2, display: "flex", gap: "2rem" }}>
-            <IconButton onClick={() => deleteCard(number)} size="large">
+            <IconButton onClick={deleteCard} size="large">
               <ClearIcon fontSize="inherit" />
             </IconButton>
             <IconButton onClick={prev} size="large">
@@ -165,7 +152,7 @@ const CardPaper = styled(Paper)`
 
 interface CardsProps {
   number: number
-  terms: TransformedTerm[]
+  terms: Term[]
   status: Status
   setStatus: React.Dispatch<React.SetStateAction<Status>>
 }

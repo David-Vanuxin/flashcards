@@ -6,7 +6,7 @@ import {
   useDeleteTermsMutation,
   useEditTermMutation,
   useMoveTermsMutation,
-  TransformedTerm,
+  Term as ITerm,
 } from "../api/modulesApi"
 
 import Typography from "@mui/material/Typography"
@@ -92,7 +92,7 @@ export default function EditModule() {
   }
 }
 
-function TermsList({ terms }: { terms: TransformedTerm[] }) {
+function TermsList({ terms }: { terms: ITerm[] }) {
   const [selected, setSelected] = useState<number[]>([])
   const [generalCheckboxChecked, setGeneralCheckboxChecked] = useState(false)
 
@@ -153,7 +153,7 @@ function TermsList({ terms }: { terms: TransformedTerm[] }) {
 }
 
 interface TermProps {
-  term: TransformedTerm
+  term: ITerm
   selected: number[]
   setSelected: React.Dispatch<React.SetStateAction<number[]>>
 }

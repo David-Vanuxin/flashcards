@@ -1,24 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 import { getModule, ModuleCreationParams } from "./helpers.js"
 
-interface ModuleResponse {
-  data: {
-    id: number
-    name: string
-    terms: Term[]
-  }
-}
-
-export interface TransformedModule {
+export interface Module {
   id: number
   name: string
-  terms: TransformedTerm[]
-}
-
-export interface TransformedTerm extends Term {
-  next: number
-  prev: number
-  hidden: boolean
+  terms: Term[]
 }
 
 export interface Term {
@@ -79,23 +65,11 @@ export const modulesApi = createApi({
       query: () => "",
       providesTags: ["Module"],
     }),
-    getModuleById: builder.query<TransformedModule, string>({
+    getModuleById: builder.query<Module, string>({
       query: id => id,
       providesTags: ["Module"],
-      transformResponse: (res: ModuleResponse): TransformedModule => {
-        // It's bad solution for making endless cards swipe (carousel)
-        // See also ../Flashcards.jsx
-        return {
-          id: res.data.id,
-          name: res.data.name,
-          terms: res.data.terms.map((term, index, arr) => {
-            let next = 0
-            if (index + 1 < arr.length) next = index + 1
-            let prev = index - 1
-            if (index === 0) prev = arr.length - 1
-            return { ...term, next, prev, hidden: false }
-          }),
-        }
+      transformResponse: (res: { data: Module }): Module => {
+        return { ...res.data }
       },
     }),
     createModule: builder.mutation<ApiCreationResponse, ModuleCreationParams>({
@@ -169,7 +143,7 @@ export const modulesApi = createApi({
           modulesApi.util.updateQueryData(
             "getModuleById",
             term.module.toString(),
-            (mod: TransformedModule) => {
+            (mod: Module) => {
               const editedTermIndex = mod.terms.findIndex(t => t.id === term.id)
               mod.terms[editedTermIndex] = {
                 ...mod.terms[editedTermIndex],
@@ -222,7 +196,7 @@ export const modulesApi = createApi({
           modulesApi.util.updateQueryData(
             "getModuleById",
             source.toString(),
-            (mod: TransformedModule) => {
+            (mod: Module) => {
               const moved = mod.terms.filter(term => terms.includes(term.id))
               mod.terms = mod.terms.filter(term => !terms.includes(term.id))
 
@@ -230,7 +204,7 @@ export const modulesApi = createApi({
                 modulesApi.util.updateQueryData(
                   "getModuleById",
                   destination.toString(),
-                  (mod: TransformedModule) => {
+                  (mod: Module) => {
                     mod.terms = [...mod.terms, ...moved]
                   },
                 ),
