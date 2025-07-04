@@ -187,10 +187,7 @@ export const modulesApi = createApi({
         return { data: results }
       },
       async onQueryStarted({ terms, destination, source }, { dispatch }) {
-        // destination passed from cache or request json (it's number)
-        // source passed from useParams (it's string)
-        // so === not worked here
-        if (destination == source) return
+        if (destination === source) return
 
         dispatch(
           modulesApi.util.updateQueryData(
