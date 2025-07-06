@@ -112,6 +112,24 @@ const TermsList = React.memo(({ terms }: { terms: ITerm[] }) => {
     })
   }
 
+  function addSelected(id: number) {
+    setSelected(arr => {
+      // throws error, but work
+      const updatedArr = [...arr]
+      if (!arr.includes(id)) updatedArr.push(id)
+      return updatedArr
+    })
+  }
+
+  function removeSelection(id: number) {
+    setSelected(selected => selected.filter(termId => termId !== id))
+  }
+
+  function handleCheckboxChange(id: number) {
+    if (!selected.includes(id)) addSelected(id)
+    else removeSelection(id)
+  }
+
   useEffect(() => {
     if (selected.length === terms.length) setGeneralCheckboxChecked(true)
     else setGeneralCheckboxChecked(false)
@@ -137,8 +155,8 @@ const TermsList = React.memo(({ terms }: { terms: ITerm[] }) => {
         <TableBody>
           {terms.map(t => (
             <Term
-              selected={selected}
-              setSelected={setSelected}
+              checked={selected.includes(t.id)}
+              onChange={() => handleCheckboxChange(t.id)}
               term={t}
               key={t.id}
             />
@@ -152,50 +170,17 @@ const TermsList = React.memo(({ terms }: { terms: ITerm[] }) => {
 
 interface TermProps {
   term: ITerm
-  selected: number[]
-  setSelected: React.Dispatch<React.SetStateAction<number[]>>
+  checked: boolean
+  onChange: () => void
 }
 
 const Term = React.memo(
-  ({ term: { id, answer, question }, selected, setSelected }: TermProps) => {
-    const [checked, setChecked] = useState(false)
-
-    useEffect(() => {
-      if (selected.includes(id)) setChecked(true)
-      else setChecked(false)
-    }, [selected])
-
-    function addSelected() {
-      setSelected(arr => {
-        // throws error, but work
-        const updatedArr = [...arr]
-        if (!arr.includes(id)) updatedArr.push(id)
-        return updatedArr
-      })
-    }
-
-    function removeSelection() {
-      setSelected(selected => selected.filter(termId => termId !== id))
-    }
-
-    function handleCheckboxChange() {
-      setChecked(checked => {
-        if (!checked) addSelected()
-        else removeSelection()
-
-        return !checked
-      })
-    }
-
+  ({ term: { id, answer, question }, checked, onChange }: TermProps) => {
     return (
       <>
         <TableRow sx={{ "& > *": { border: 0 } }}>
           <TableCell>
-            <Checkbox
-              size="small"
-              checked={checked}
-              onChange={handleCheckboxChange}
-            />
+            <Checkbox size="small" checked={checked} onChange={onChange} />
           </TableCell>
           <TableCell>
             <EditionGroup
@@ -216,6 +201,9 @@ const Term = React.memo(
         </TableRow>
       </>
     )
+  },
+  (prevProps: TermProps, nextProps: TermProps) => {
+    return prevProps.checked === nextProps.checked
   },
 )
 
