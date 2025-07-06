@@ -92,7 +92,7 @@ export default function EditModule() {
   }
 }
 
-function TermsList({ terms }: { terms: ITerm[] }) {
+const TermsList = React.memo(({ terms }: { terms: ITerm[] }) => {
   const [selected, setSelected] = useState<number[]>([])
   const [generalCheckboxChecked, setGeneralCheckboxChecked] = useState(false)
 
@@ -100,9 +100,7 @@ function TermsList({ terms }: { terms: ITerm[] }) {
     setSelected([...terms.map(term => term.id)])
   }
 
-  function removeAllSelected() {
-    setSelected([])
-  }
+  const removeAllSelected = React.useCallback(() => setSelected([]), [])
 
   function handleGeneralCheckboxChange() {
     setGeneralCheckboxChecked(checked => {
@@ -150,7 +148,7 @@ function TermsList({ terms }: { terms: ITerm[] }) {
       <BottomMenu selected={selected} removeAllSelected={removeAllSelected} />
     </>
   )
-}
+})
 
 interface TermProps {
   term: ITerm
@@ -158,70 +156,68 @@ interface TermProps {
   setSelected: React.Dispatch<React.SetStateAction<number[]>>
 }
 
-function Term({
-  term: { id, answer, question },
-  selected,
-  setSelected,
-}: TermProps) {
-  const [checked, setChecked] = useState(false)
+const Term = React.memo(
+  ({ term: { id, answer, question }, selected, setSelected }: TermProps) => {
+    const [checked, setChecked] = useState(false)
 
-  useEffect(() => {
-    if (selected.includes(id)) setChecked(true)
-    else setChecked(false)
-  }, [selected])
+    useEffect(() => {
+      if (selected.includes(id)) setChecked(true)
+      else setChecked(false)
+    }, [selected])
 
-  function addSelected() {
-    setSelected(arr => {
-      // throws error, but work
-      const updatedArr = [...arr]
-      if (!arr.includes(id)) updatedArr.push(id)
-      return updatedArr
-    })
-  }
+    function addSelected() {
+      setSelected(arr => {
+        // throws error, but work
+        const updatedArr = [...arr]
+        if (!arr.includes(id)) updatedArr.push(id)
+        return updatedArr
+      })
+    }
 
-  function removeSelection() {
-    setSelected(selected => selected.filter(termId => termId !== id))
-  }
+    function removeSelection() {
+      setSelected(selected => selected.filter(termId => termId !== id))
+    }
 
-  function handleCheckboxChange() {
-    setChecked(checked => {
-      if (!checked) addSelected()
-      else removeSelection()
+    function handleCheckboxChange() {
+      setChecked(checked => {
+        if (!checked) addSelected()
+        else removeSelection()
 
-      return !checked
-    })
-  }
+        return !checked
+      })
+    }
 
-  return (
-    <>
-      <TableRow sx={{ "& > *": { border: 0 } }}>
-        <TableCell>
-          <Checkbox
-            size="small"
-            checked={checked}
-            onChange={handleCheckboxChange}
-          />
-        </TableCell>
-        <TableCell>
-          <EditionGroup
-            type="answer"
-            termId={id}
-            defaultValue={answer}
-            label="Термин"
-          />
-        </TableCell>
-        <TableCell>
-          <EditionGroup
-            type="question"
-            termId={id}
-            defaultValue={question}
-            label="Значение"
-          />
-        </TableCell>
-      </TableRow>
-    </>
-  )
-}
+    return (
+      <>
+        <TableRow sx={{ "& > *": { border: 0 } }}>
+          <TableCell>
+            <Checkbox
+              size="small"
+              checked={checked}
+              onChange={handleCheckboxChange}
+            />
+          </TableCell>
+          <TableCell>
+            <EditionGroup
+              type="answer"
+              termId={id}
+              defaultValue={answer}
+              label="Термин"
+            />
+          </TableCell>
+          <TableCell>
+            <EditionGroup
+              type="question"
+              termId={id}
+              defaultValue={question}
+              label="Значение"
+            />
+          </TableCell>
+        </TableRow>
+      </>
+    )
+  },
+)
 
 interface EditionGroupProps {
   defaultValue: string
@@ -230,64 +226,61 @@ interface EditionGroupProps {
   termId: number
 }
 
-function EditionGroup({
-  defaultValue,
-  label,
-  type,
-  termId,
-}: EditionGroupProps) {
-  const [buttonsVisibility, setButtonsVisibility] = useState(false)
-  const [textValue, setTextValue] = useState(defaultValue)
-  const id = useIdParam()
-  const [editTerm, result] = useEditTermMutation()
+const EditionGroup = React.memo(
+  ({ defaultValue, label, type, termId }: EditionGroupProps) => {
+    const [buttonsVisibility, setButtonsVisibility] = useState(false)
+    const [textValue, setTextValue] = useState(defaultValue)
+    const id = useIdParam()
+    const [editTerm, result] = useEditTermMutation()
 
-  useEffect(() => {
-    if (result.isError) console.error(result.error)
-  }, [result])
+    useEffect(() => {
+      if (result.isError) console.error(result.error)
+    }, [result])
 
-  function saveChanges() {
-    editTerm({
-      id: termId,
-      module: id,
-      [type]: textValue,
-    })
-    setButtonsVisibility(false)
-  }
+    function saveChanges() {
+      editTerm({
+        id: termId,
+        module: id,
+        [type]: textValue,
+      })
+      setButtonsVisibility(false)
+    }
 
-  function changeHandler(event: React.ChangeEvent) {
-    const newValue = (event.currentTarget as HTMLInputElement).value
-    setTextValue(newValue)
+    function changeHandler(event: React.ChangeEvent) {
+      const newValue = (event.currentTarget as HTMLInputElement).value
+      setTextValue(newValue)
 
-    if (newValue !== defaultValue && newValue !== "") {
-      setButtonsVisibility(true)
-    } else setButtonsVisibility(false)
-  }
+      if (newValue !== defaultValue && newValue !== "") {
+        setButtonsVisibility(true)
+      } else setButtonsVisibility(false)
+    }
 
-  function cancel() {
-    setTextValue(defaultValue)
-    setButtonsVisibility(false)
-  }
+    function cancel() {
+      setTextValue(defaultValue)
+      setButtonsVisibility(false)
+    }
 
-  return (
-    <>
-      <Box sx={{ display: "flex", justifyContent: "right" }}>
-        <TextField
-          value={textValue}
-          onChange={changeHandler}
-          sx={{ width: "100%" }}
-          size="small"
-          label={label}
-          variant="outlined"
-        ></TextField>
-        <EditionConfirmButtonsGroup
-          confirm={saveChanges}
-          cancel={cancel}
-          show={buttonsVisibility}
-        />
-      </Box>
-    </>
-  )
-}
+    return (
+      <>
+        <Box sx={{ display: "flex", justifyContent: "right" }}>
+          <TextField
+            value={textValue}
+            onChange={changeHandler}
+            sx={{ width: "100%" }}
+            size="small"
+            label={label}
+            variant="outlined"
+          ></TextField>
+          <EditionConfirmButtonsGroup
+            confirm={saveChanges}
+            cancel={cancel}
+            show={buttonsVisibility}
+          />
+        </Box>
+      </>
+    )
+  },
+)
 
 function EditionConfirmButtonsGroup({
   show,
@@ -325,69 +318,72 @@ function EditionConfirmButtonsGroup({
     )
 }
 
-function BottomMenu({
-  selected,
-  removeAllSelected,
-}: {
-  selected: number[]
-  removeAllSelected: () => void
-}) {
-  const [deleteTerms] = useDeleteTermsMutation()
-  const [moveTerms] = useMoveTermsMutation()
-  const id = useIdParam()
-  const [openDeleteConfirmDialog, setOpenDeleteConfirmDialog] = useState(false)
-  const [openMoveConfirmDialog, setOpenMoveConfirmDialog] = useState(false)
+const BottomMenu = React.memo(
+  ({
+    selected,
+    removeAllSelected,
+  }: {
+    selected: number[]
+    removeAllSelected: () => void
+  }) => {
+    const [deleteTerms] = useDeleteTermsMutation()
+    const [moveTerms] = useMoveTermsMutation()
+    const id = useIdParam()
+    const [openDeleteConfirmDialog, setOpenDeleteConfirmDialog] =
+      useState(false)
+    const [openMoveConfirmDialog, setOpenMoveConfirmDialog] = useState(false)
 
-  function handleClickDelete() {
-    deleteTerms({ moduleId: id, deletedTerms: selected })
-    setOpenDeleteConfirmDialog(false)
-    removeAllSelected()
-  }
+    function handleClickDelete() {
+      deleteTerms({ moduleId: id, deletedTerms: selected })
+      setOpenDeleteConfirmDialog(false)
+      removeAllSelected()
+    }
 
-  function handleClickMove(destinationId: string) {
-    moveTerms({ terms: selected, destination: destinationId, source: id })
-    setOpenMoveConfirmDialog(false)
-    removeAllSelected()
-  }
+    function handleClickMove(destinationId: string) {
+      moveTerms({ terms: selected, destination: destinationId, source: id })
+      setOpenMoveConfirmDialog(false)
+      removeAllSelected()
+    }
 
-  if (selected.length !== 0)
-    return (
-      <>
-        <AppBar position="fixed" sx={{ top: "auto", bottom: 0 }}>
-          <Toolbar sx={{ display: "flex", justifyContent: "center", gap: 1 }}>
-            <Typography
-              variant="button"
-              gutterBottom
-              sx={{ color: "text.primary", p: 1, m: 1 }}
-            >
-              Выбрано: {selected.length}
-            </Typography>
-            <Button onClick={() => setOpenMoveConfirmDialog(true)}>
-              Переместить
-            </Button>
-            <Button onClick={() => setOpenDeleteConfirmDialog(true)}>
-              Удалить
-            </Button>
-            <Button onClick={removeAllSelected} variant="outlined">
-              Отменить
-            </Button>
-          </Toolbar>
-        </AppBar>
-        <DeleteConfirmDialog
-          open={openDeleteConfirmDialog}
-          text={`Вы действительно хотите удалить выбранные термины (${selected.length})?`}
-          submit={handleClickDelete}
-          cancel={() => setOpenDeleteConfirmDialog(false)}
-        />
-        <MoveConfirmDialog
-          open={openMoveConfirmDialog}
-          text={`Кликните на название модуля из списка ниже, чтобы переместить в него выбранные термины (${selected.length})`}
-          submit={handleClickMove}
-          cancel={() => setOpenMoveConfirmDialog(false)}
-        />
-      </>
-    )
-}
+    if (selected.length !== 0)
+      return (
+        <>
+          <AppBar position="fixed" sx={{ top: "auto", bottom: 0 }}>
+            <Toolbar sx={{ display: "flex", justifyContent: "center", gap: 1 }}>
+              <Typography
+                variant="button"
+                gutterBottom
+                sx={{ color: "text.primary", p: 1, m: 1 }}
+              >
+                Выбрано: {selected.length}
+              </Typography>
+              <Button onClick={() => setOpenMoveConfirmDialog(true)}>
+                Переместить
+              </Button>
+              <Button onClick={() => setOpenDeleteConfirmDialog(true)}>
+                Удалить
+              </Button>
+              <Button onClick={removeAllSelected} variant="outlined">
+                Отменить
+              </Button>
+            </Toolbar>
+          </AppBar>
+          <DeleteConfirmDialog
+            open={openDeleteConfirmDialog}
+            text={`Вы действительно хотите удалить выбранные термины (${selected.length})?`}
+            submit={handleClickDelete}
+            cancel={() => setOpenDeleteConfirmDialog(false)}
+          />
+          <MoveConfirmDialog
+            open={openMoveConfirmDialog}
+            text={`Кликните на название модуля из списка ниже, чтобы переместить в него выбранные термины (${selected.length})`}
+            submit={handleClickMove}
+            cancel={() => setOpenMoveConfirmDialog(false)}
+          />
+        </>
+      )
+  },
+)
 
 interface MoveConfirmDialogProps {
   open: boolean
