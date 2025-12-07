@@ -53,10 +53,14 @@ interface MoveTermsParams {
   source: string
 }
 
+const apiLocation = `${import.meta.env.VITE_PROTOCOL}://${import.meta.env.VITE_API}`
+
+console.log(apiLocation)
+
 export const modulesApi = createApi({
   reducerPath: "modulesApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: `http://${import.meta.env.VITE_API}/module/`,
+    baseUrl: `${apiLocation}/module/`,
     isJsonContentType: () => true,
   }),
   tagTypes: ["Module"],
@@ -131,7 +135,7 @@ export const modulesApi = createApi({
       async queryFn(term, _api, _extraOptions, baseQuery) {
         if (!term.id) throw new Error("term.id is required")
 
-        await fetch(`http://${import.meta.env.VITE_API}/term/${term.id}`, {
+        await fetch(`${apiLocation}/term/${term.id}`, {
           method: "put",
           body: JSON.stringify(term),
           headers: { "Content-Type": "application/json" },
@@ -160,7 +164,7 @@ export const modulesApi = createApi({
 
         const results = await Promise.all(
           terms.map(term =>
-            fetch(`http://${import.meta.env.VITE_API}/term/`, {
+            fetch(`${apiLocation}/term/`, {
               method: "post",
               body: JSON.stringify({ ...term, module: moduleId }),
               headers: { "Content-Type": "application/json" },
@@ -177,7 +181,7 @@ export const modulesApi = createApi({
       async queryFn({ terms, destination }) {
         const results = await Promise.all(
           terms.map(id =>
-            fetch(`http://${import.meta.env.VITE_API}/term/${id}`, {
+            fetch(`${apiLocation}/term/${id}`, {
               method: "put",
               body: JSON.stringify({ module: destination }),
               headers: { "Content-Type": "application/json" },
